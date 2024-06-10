@@ -1,0 +1,80 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "com.google.gms.google-services" // Google services plugin
+    id "dev.flutter.flutter-gradle-plugin" // Flutter Gradle Plugin
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+android {
+    namespace = "com.studio.ucservice_customer.mr_urban_customer_app"
+    compileSdk = 34
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.studio.ucservice_customer.mr_urban_customer_app"
+        minSdk = 23
+        targetSdk = 34
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+       sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+
+     lintOptions {
+        // Enable lint checks during debug builds.
+        checkReleaseBuilds false
+        // Turn on specific lint checks.
+        // For example, to enforce all lint rules as errors:
+        // warningsAsErrors true
+        // Or specify specific rules:
+        // disable 'InvalidPackage'
+        // enable 'UnusedResources'
+        // You can find more lint rules in the lint documentation.
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.browser:browser:1.5.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+}
+
+apply plugin: 'com.google.gms.google-services'

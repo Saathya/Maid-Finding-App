@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "982942075715",
+    "project_id": "maidfinding",
+    "storage_bucket": "maidfinding.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982942075715:android:5d00645c4d238c10787df6",
+        "android_client_info": {
+          "package_name": "com.studio.ucservice_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982942075715-g5o3h4iuo8jf1ufeon30ga0h5c7smbt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studio.ucservice_customer",
+            "certificate_hash": "c8442b0ef25d12ee24237eb3b54eedece5410436"
+          }
+        },
+        {
+          "client_id": "982942075715-k7gadiv6rq5ku9hglp6kvlgclct40usp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdeCXwbSMm1LdTMT3QTkZmj1SMhnXsabw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982942075715-k7gadiv6rq5ku9hglp6kvlgclct40usp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "982942075715-aourkd9v9at8jhcfogjr38e9uhpmqbft.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.studio.ucserviceCustomer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982942075715:android:1914139e4b5c3454787df6",
+        "android_client_info": {
+          "package_name": "com.studio.ucservice_customer.mr_urban_customer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982942075715-oanu2ilt5f6gif3a943c5devqpeplppl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studio.ucservice_customer.mr_urban_customer_app",
+            "certificate_hash": "49e1bd22c7517f3f80b31d83361d3231d976f9d4"
+          }
+        },
+        {
+          "client_id": "982942075715-k7gadiv6rq5ku9hglp6kvlgclct40usp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdeCXwbSMm1LdTMT3QTkZmj1SMhnXsabw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982942075715-k7gadiv6rq5ku9hglp6kvlgclct40usp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "982942075715-aourkd9v9at8jhcfogjr38e9uhpmqbft.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.studio.ucserviceCustomer"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
