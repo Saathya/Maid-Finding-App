@@ -4,7 +4,7 @@ class TextString {
   /// OnBoarding Screen
   static const Beautyparlouratyourhome = "Beauty parlour at your home";
   static const skip = "Skip";
-  static const Plumberexpartnearbyyou = "Plumber & expart nearby you";
+  static const Plumberexpartnearbyyou = "Plumber & expert nearby you";
   static const Professionalhomecleaning = "Professional home cleaning";
   static const loremIpsumFont =
       "Lorem ipsum is a placeholder text commonly used to demonstrate the visual.";

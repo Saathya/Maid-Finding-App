@@ -450,7 +450,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                             fontSize: 14)),
                   ),
                   const SizedBox(height: 8),
-                  Text("Satrts From",
+                  Text("Starts From",
                       style: TextStyle(
                           color: notifire.greyfont,
                           fontFamily: CustomColors.fontFamily,

@@ -1,5 +1,5 @@
 class Config {
-  static const oneSignel = "***************************";
+  static const oneSignel = "53f958f9-c473-4afa-bcb9-b9a39c903c60";
   static const googleKey = "***********************************";
 
   static const baseUrl = "https://mrurban.zozostudio.tech/api/";
