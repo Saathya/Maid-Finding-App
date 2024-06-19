@@ -11,7 +11,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => ColorNotifire())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => ColorNotifire()),
+    ],
     child: GetMaterialApp(
       title: 'Maid Finding App',
       debugShowCheckedModeBanner: false,

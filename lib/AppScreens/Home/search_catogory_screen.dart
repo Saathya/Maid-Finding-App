@@ -4,9 +4,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
+import 'package:mr_urban_customer_app/AppScreens/Filter/filterscreen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
 import 'package:mr_urban_customer_app/Controller/AppControllerApi.dart';
+import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
@@ -23,9 +25,16 @@ class SearchCategoryScreen extends StatefulWidget {
 
   final String? catTital;
   final List? catList;
+  final List<Maid>? filteredMaidList;
+
   String? catId;
   SearchCategoryScreen(
-      {Key? key, this.catId, this.catTital, this.catList, this.type})
+      {Key? key,
+      this.catId,
+      this.catTital,
+      this.catList,
+      this.type,
+      this.filteredMaidList})
       : super(key: key);
 
   @override
@@ -121,59 +130,99 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
               children: [
                 statusBar(context),
                 //! Search textField
-                Container(
-                  width: Get.width,
-                  color: notifire.getprimerycolor,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14)),
-                      child: TextField(
-                          controller: search,
-                          style: TextStyle(color: notifire.getdarkscolor),
-                          onChanged: (val) {
-                            val.length != 0
-                                ? vendorSearchApi(val)
-                                : x
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: notifire.getprimerycolor,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: TextField(
+                            controller: search,
+                            style: TextStyle(color: notifire.getdarkscolor),
+                            onChanged: (val) {
+                              if (val.length != 0) {
+                                vendorSearchApi(val);
+                              } else {
+                                x
                                     .categoryWiseProviderApi(widget.catId)
                                     .then((val) {
-                                    setState(() {
-                                      isLoading = false;
-                                    });
+                                  setState(() {
+                                    isLoading = false;
                                   });
-                          },
-                          cursorColor: notifire.getdarkscolor,
-                          decoration: InputDecoration(
+                                });
+                              }
+                            },
+                            cursorColor: notifire.getdarkscolor,
+                            decoration: InputDecoration(
                               isDense: true,
                               hintStyle:
                                   TextStyle(color: notifire.getdarkscolor),
                               prefixIcon: InkWell(
-                                  onTap: () {
-                                    Get.back();
-                                  },
-                                  child: Icon(Icons.arrow_back,
-                                      color: notifire.getdarkscolor)),
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Icon(Icons.arrow_back,
+                                    color: notifire.getdarkscolor),
+                              ),
                               suffixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 8),
-                                child: Image(
-                                    image: AssetImage("assets/roundSearch.png"),
-                                    height: 4),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  "assets/roundSearch.png",
+                                  height: 24,
+                                  width: 24,
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: CustomColors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(14)),
+                                borderSide: BorderSide(
+                                    color: CustomColors.grey.shade300),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
                               focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: CustomColors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(16)),
-                              hintText: 'Search Category')),
+                                borderSide: BorderSide(
+                                    color: CustomColors.grey.shade300),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              hintText: 'Search Category',
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Filterscreen(
+                                        )));
+                          },
+                          icon: Icon(
+                            Icons.filter_list_rounded,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
+                // Add the rest of your UI components here
+
                 SizedBox(height: Get.height * 0.02),
                 !isLoading
                     ? vendorlist.isNotEmpty
@@ -261,7 +310,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                                   height: 50,
                                                   width: 50,
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 14),
                                                   decoration: BoxDecoration(
                                                       color: CustomColors.white,
@@ -302,30 +351,56 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                               ),
                             ),
                           )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 5),
-                            child: Column(children: [
-                              SizedBox(height: Get.height * 0.10),
-                              Image(
-                                  image: AssetImage("assets/emptyList1.png"),
-                                  height: Get.height * 0.28),
-                              SizedBox(height: Get.height * 0.04),
-                              Center(
-                                child: SizedBox(
-                                  width: Get.width * 0.80,
-                                  child: const Text(
-                                      "Currently, Service not listed on this Category",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: CustomColors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: CustomColors.fontFamily,
-                                          fontSize: 18)),
-                                ),
-                              ),
-                            ]),
+                        : GridView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 2,
+                              crossAxisSpacing: 2,
+                              childAspectRatio: 0.62,
+                            ),
+                            itemCount: widget.filteredMaidList == null ||
+                                    widget.filteredMaidList!.isEmpty
+                                ? maidList.length
+                                : widget.filteredMaidList!.length,
+                            itemBuilder: (context, index) {
+                              Maid maid;
+                              if (widget.filteredMaidList == null ||
+                                  widget.filteredMaidList!.isEmpty) {
+                                maid = maidList[index];
+                              } else {
+                                maid = widget.filteredMaidList![index];
+                              }
+                              return buildGridItem(maid);
+                            },
                           )
+
+                    // : Padding(
+                    //     padding: const EdgeInsets.symmetric(
+                    //         horizontal: 14, vertical: 5),
+                    //     child: Column(children: [
+                    //       SizedBox(height: Get.height * 0.10),
+                    //       Image(
+                    //           image: AssetImage("assets/emptyList1.png"),
+                    //           height: Get.height * 0.28),
+                    //       SizedBox(height: Get.height * 0.04),
+                    //       Center(
+                    //         child: SizedBox(
+                    //           width: Get.width * 0.80,
+                    //           child: const Text(
+                    //               "Currently, Service not listed on this Category",
+                    //               textAlign: TextAlign.center,
+                    //               style: TextStyle(
+                    //                   color: CustomColors.white,
+                    //                   fontWeight: FontWeight.bold,
+                    //                   fontFamily: CustomColors.fontFamily,
+                    //                   fontSize: 18)),
+                    //         ),
+                    //       ),
+                    //     ]),
+                    //   )
                     : Column(
                         children: [
                           SizedBox(height: Get.height * 0.34),
@@ -346,29 +421,54 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
 
   Widget nearbyvendorsVerticalList() {
     return vendorlist.isEmpty
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-            child: Column(children: [
-              SizedBox(height: Get.height * 0.10),
-              Image(
-                  image: AssetImage("assets/emptyList1.png"),
-                  height: Get.height * 0.28),
-              SizedBox(height: Get.height * 0.04),
-              Center(
-                child: SizedBox(
-                  width: Get.width * 0.80,
-                  child: const Text(
-                      "Currently, Service not listed on this Category",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: CustomColors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: CustomColors.fontFamily,
-                          fontSize: 18)),
-                ),
-              ),
-            ]),
+        ? GridView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 2,
+              crossAxisSpacing: 2,
+              childAspectRatio: 0.62,
+            ),
+            itemCount: widget.filteredMaidList == null ||
+                    widget.filteredMaidList!.isEmpty
+                ? maidList.length
+                : widget.filteredMaidList!.length,
+            itemBuilder: (context, index) {
+              Maid maid;
+              if (widget.filteredMaidList == null ||
+                  widget.filteredMaidList!.isEmpty) {
+                maid = maidList[index];
+              } else {
+                maid = widget.filteredMaidList![index];
+              }
+              return buildGridItem(maid);
+            },
           )
+
+        // ? Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+        //     child: Column(children: [
+        //       SizedBox(height: Get.height * 0.10),
+        //       Image(
+        //           image: AssetImage("assets/emptyList1.png"),
+        //           height: Get.height * 0.28),
+        //       SizedBox(height: Get.height * 0.04),
+        //       Center(
+        //         child: SizedBox(
+        //           width: Get.width * 0.80,
+        //           child: const Text(
+        //               "Currently, Service not listed on this Category",
+        //               textAlign: TextAlign.center,
+        //               style: TextStyle(
+        //                   color: CustomColors.white,
+        //                   fontWeight: FontWeight.bold,
+        //                   fontFamily: CustomColors.fontFamily,
+        //                   fontSize: 18)),
+        //         ),
+        //       ),
+        //     ]),
+        //   )
         : isVisibalVertical == true
             ? SizedBox(
                 height: Get.height * 0.70,
@@ -387,14 +487,125 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 2,
-                      crossAxisSpacing: 2,
-                      childAspectRatio: 0.62),
-                  itemBuilder: (context, i) => userGridview(i),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
+                    childAspectRatio: 0.62,
+                  ),
                   itemCount: vendorlist.length,
+                  itemBuilder: (context, index) {
+                    return userGridview(index);
+                  },
+                ));
+  }
+
+  List<Maid> maidList = [
+    Maid(
+      maidName: "Alice Smith",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 15000),
+      maidLocation: LocationFilter(location: "New York"),
+      maidEducation: EducationFilter(education: "High School"),
+      maidRating: RatingFilter(minRating: 4.8),
+    ),
+    Maid(
+      maidName: "Emily Johnson",
+      maidImg: "assets/img2.jpg",
+      maidPrice: PriceFilter(minPrice: 10000),
+      maidLocation: LocationFilter(location: "Los Angeles"),
+      maidEducation: EducationFilter(education: "Bachelor's Degree"),
+      maidRating: RatingFilter(minRating: 4.5),
+    ),
+    Maid(
+      maidName: "Sophia Williams",
+      maidImg: "assets/home img-1.jpg",
+      maidPrice: PriceFilter(minPrice: 18000),
+      maidLocation: LocationFilter(location: "Chicago"),
+      maidEducation: EducationFilter(education: "Associate's Degree"),
+      maidRating: RatingFilter(minRating: 4.3),
+    ),
+    // Add more Maid objects as needed
+  ];
+
+  Widget buildGridItem(Maid maid) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: InkWell(
+        onTap: () {
+          // Handle onTap action
+        },
+        child: SizedBox(
+          width: 160,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  maid.maidImg,
+                  fit: BoxFit.cover,
+                  height: 140,
+                  width: 150,
                 ),
-              );
+              ),
+              const SizedBox(height: 8),
+              Text(
+                maid.maidName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: CustomColors.fontFamily,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+              const SizedBox(height: 3),
+              const Text(
+                "Starts From",
+                style: TextStyle(
+                  fontFamily: CustomColors.fontFamily,
+                  fontWeight: FontWeight.w500,
+                  color: CustomColors.grey,
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 80,
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: CustomColors.accentColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "₹${maid.maidPrice.minPrice}",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Image.asset(ImagePath.starImg, scale: 22),
+                      Text(
+                        maid.maidRating.minRating.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   userList(index) {

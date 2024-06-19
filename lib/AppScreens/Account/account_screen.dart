@@ -2,15 +2,14 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:mr_urban_customer_app/ApiServices/api_call_service.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
@@ -29,10 +28,8 @@ import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:mr_urban_customer_app/widget/text_form_field.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../ApiServices/Api_werper.dart';
 import '../../utils/colors.dart';
 import '../Wallet/WalletHistory.dart';
@@ -61,6 +58,8 @@ class _AccountScreenState extends State<AccountScreen> {
   PackageInfo? packageInfo;
   String? appName;
   String? packageName;
+
+  User? user = FirebaseAuth.instance.currentUser;
 
   String? networkimage;
   final Email = TextEditingController();
@@ -203,13 +202,12 @@ class _AccountScreenState extends State<AccountScreen> {
                               height: Get.height * 0.10,
                               width: Get.width * 0.24,
                               child: _image == null
-                                  ? networkimage != null
+                                  ? user != null
                                       ? ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(16),
                                           child: CachedNetworkImage(
-                                              imageUrl: Config.imgBaseUrl +
-                                                  networkimage!,
+                                              imageUrl: user!.photoURL!,
                                               placeholder: (context, url) =>
                                                   shimmerLoading(),
                                               errorWidget:
@@ -266,7 +264,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
 
                     // getData.read("UserLogin")["name"] ?? "",
-                    Text("Guest",
+                    Text(user!.displayName ?? 'Guest',
                         style: TextStyle(
                             fontSize: 17,
                             color: notifire.getdarkscolor,
@@ -274,13 +272,11 @@ class _AccountScreenState extends State<AccountScreen> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.006),
-                    getData.read("UserLogin") != null
-                        ? Text("Guest Email",
-                            style: TextStyle(
-                                color: notifire.getdarkscolor,
-                                fontSize: 17,
-                                fontFamily: "Gilroy Bold"))
-                        : const SizedBox(),
+                    Text(user!.email ?? "Guest Email",
+                        style: TextStyle(
+                            color: notifire.getdarkscolor,
+                            fontSize: 17,
+                            fontFamily: "Gilroy Bold")),
                     const SizedBox(height: 14),
                     InkWell(
                       onTap: () {

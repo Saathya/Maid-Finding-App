@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AppScreens/Booking/Booking.dart';
-import 'AppScreens/Wallet/WalletHistory.dart';
+// import 'AppScreens/Wallet/WalletHistory.dart';
 import 'utils/AppWidget.dart';
 
 var isLoagin;
@@ -36,7 +36,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
     setState(() {});
     isLoagin = getData.read("UserLogin");
 
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
   }
 
   late ColorNotifire notifire;
@@ -53,7 +53,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
   List<Widget> myChilders = [
     const HomeScreen(),
     const BookingScreen(),
-    const WalletReportPage(),
+    // const WalletReportPage(),
     const AccountScreen(),
   ];
 
@@ -115,16 +115,16 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
                 const Text('Booking',
                     style: TextStyle(fontSize: 12, color: Colors.white)),
               ])),
-              Tab(
-                  child: Column(children: [
-                Image.asset(
-                  ImagePath.walletIcon,
-                  scale: 19,
-                  color: Colors.white,
-                ),
-                const Text('Wallet',
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
-              ])),
+              // Tab(
+              //     child: Column(children: [
+              //   Image.asset(
+              //     ImagePath.walletIcon,
+              //     scale: 19,
+              //     color: Colors.white,
+              //   ),
+              //   const Text('Wallet',
+              //       style: TextStyle(fontSize: 12, color: Colors.white)),
+              // ])),
               Tab(
                   child: Column(children: [
                 Image.asset(

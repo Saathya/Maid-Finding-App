@@ -2,8 +2,12 @@ class Config {
   static const oneSignel = "53f958f9-c473-4afa-bcb9-b9a39c903c60";
   static const googleKey = "***********************************";
 
-  static const baseUrl = "https://mrurban.zozostudio.tech/api/";
-  static const imgBaseUrl = "https://mrurban.zozostudio.tech/";
+  static const baseUrl = "https://maidfinding.wapventure.com/api/";
+
+  static const imgBaseUrl = "https://maidfinding.wapventure.com/";
+
+  // static const baseUrl = "https://mrurban.zozostudio.tech/api/";
+  // static const imgBaseUrl = "https://mrurban.zozostudio.tech/";
 
   static const profileImage = "pro_image.php";
   static const register = "reg_user.php";

@@ -21,7 +21,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../ApiServices/Api_werper.dart';
 import '../../ApiServices/url.dart';
-import '../../BootomBar.dart';
 import 'flutter_google_places.dart';
 import '../../loginAuth/login_screen.dart';
 import '../../model/home_page_model.dart';
@@ -468,10 +467,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(16.0)),
               child: CachedNetworkImage(
-                  imageUrl:
-                      "${Config.imgBaseUrl}${homePageModel?.homeData?.banner?[index].img}",
-                  width: double.infinity,
-                  fit: BoxFit.cover),
+                width: double.infinity,
+                fit: BoxFit.cover,
+                imageUrl:
+                    "${Config.imgBaseUrl}${homePageModel?.homeData?.banner?[index].img}",
+              ),
             );
           },
         ),

@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/loginAuth/login_screen.dart';
 import 'package:mr_urban_customer_app/model/country_code_list_model.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
@@ -238,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: ButtonTheme(
           alignedDropdown: true,
           child: DropdownButton<String>(
-            dropdownColor: Colors.white, // Replace with your primary color
+            dropdownColor: Colors.black, // Replace with your primary color
             value: _selectedCountryCode,
             items: countryCode.map((value) {
               return DropdownMenuItem<String>(
