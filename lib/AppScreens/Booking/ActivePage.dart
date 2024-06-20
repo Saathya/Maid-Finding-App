@@ -2,18 +2,17 @@
 
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
+import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
+import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:http/http.dart' as http;
-
 import '../../ApiServices/Api_werper.dart';
 import '../../utils/AppWidget.dart';
 import 'BookingDetails.dart';
@@ -32,7 +31,36 @@ class _ActiveScreenState extends State<ActiveScreen> {
   Color? buttonColor;
   @override
   void initState() {
+    fetchMaidData(); // Fetch maid data on screen initialization
+
     super.initState();
+  }
+
+  List<Maid> maidData = []; // List to store maid data
+
+  void fetchMaidData() async {
+    List<Maid> cartItems = await CartService.getCartItems();
+
+    // Filter maid data based on payment status (e.g., "pending")
+    List<Maid> pendingMaidData = cartItems.where((maid) {
+      return maid.paymentStatus == 'pending';
+    }).toList();
+
+    setState(() {
+      maidData = pendingMaidData; // Update state with filtered data
+    });
+  }
+
+  void removeFromCart(Maid maid) async {
+    await CartService.removeFromCart(maid);
+    fetchMaidData(); // Refresh the maid data after removing the item
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        '${maid.maidName} removed from booking',
+        style: const TextStyle(
+            fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
+      ),
+    ));
   }
 
   late ColorNotifire notifire;
@@ -64,11 +92,182 @@ class _ActiveScreenState extends State<ActiveScreen> {
                       return activeList(users[i]);
                     },
                   )
-                : emptyBooking();
+                : maidDataListView();
           } else {
             return Center(child: isLoadingIndicator());
           }
         },
+      ),
+    );
+  }
+
+  Widget maidDataListView() {
+    return maidData.isNotEmpty
+        ? ListView.builder(
+            itemCount: maidData.length,
+            shrinkWrap: true,
+            itemBuilder: (ctx, i) {
+              return buildGridItem(maidData[i], i);
+            },
+          )
+        : emptyBooking();
+  }
+
+  Widget buildGridItem(Maid maid, int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: SizedBox(
+        width: 160,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(
+                maid.maidImg,
+                fit: BoxFit.cover,
+                height: 160,
+                width: 120,
+              ),
+            ),
+            const SizedBox(
+                width: 10), // Add some space between image and content
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(ImagePath.starImg, scale: 22),
+                        const SizedBox(
+                            width:
+                                4), // Adjust spacing between star and rating text
+                        Text(
+                          maid.maidRating.minRating.toString(),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 58.0),
+                      child: Container(
+                        height: 35,
+                        width: 80,
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(30)),
+                        child: Center(
+                          child: Text(
+                            '₹${maid.maidPrice.minPrice.toString()}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: CustomColors.fontFamily),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  maid.maidName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: CustomColors.fontFamily,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Wrap(
+                      spacing: 6,
+                      children: maid.serviceItems
+                          .map((item) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: CustomColors.accentColor,
+                                ),
+                                child: Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                          color: CustomColors.orangeColor,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Center(
+                        child: Text(
+                          maid.paymentStatus,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: CustomColors.fontFamily),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 28.0),
+                      child: InkWell(
+                        onTap: () {
+                          removeFromCart(maid); // Call remove function here
+                        },
+                        child: Container(
+                          height: 30,
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          decoration: BoxDecoration(
+                              color: CustomColors.red,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: const Center(
+                            child: Text(
+                              'Remove',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: CustomColors.fontFamily),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

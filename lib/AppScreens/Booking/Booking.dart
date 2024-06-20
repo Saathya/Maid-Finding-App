@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 import 'ActivePage.dart';
 import 'CancelledPage.dart';
 import 'SuccessPage.dart';
@@ -28,6 +27,7 @@ class _BookingScreenState extends State<BookingScreen>
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
+
     super.initState();
   }
 
@@ -82,15 +82,18 @@ class _BookingScreenState extends State<BookingScreen>
             child: Column(children: [
               Container(
                 height: 46,
+                width: double.infinity,
                 decoration: BoxDecoration(
                     color: notifire.getprimerycolor,
-                    borderRadius: BorderRadius.circular(12.0)),
+                    borderRadius: BorderRadius.circular(1.0)),
                 child: TabBar(
                     controller: _tabController,
                     labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w600, fontFamily: "Gilroy Bold"),
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Gilroy Bold",
+                        fontSize: 14),
                     indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: BorderRadius.circular(10.0),
                         color: CustomColors.primaryColor),
                     labelColor: Colors.white,
                     unselectedLabelColor: notifire.getdarkscolor,

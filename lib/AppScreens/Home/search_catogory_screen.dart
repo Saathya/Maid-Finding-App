@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Filter/filterscreen.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/dummy/service_detail.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/dummy/summary.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
 import 'package:mr_urban_customer_app/Controller/AppControllerApi.dart';
@@ -208,8 +210,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Filterscreen(
-                                        )));
+                                    builder: (context) => Filterscreen()));
                           },
                           icon: Icon(
                             Icons.filter_list_rounded,
@@ -351,16 +352,9 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                               ),
                             ),
                           )
-                        : GridView.builder(
+                        : ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 2,
-                              crossAxisSpacing: 2,
-                              childAspectRatio: 0.62,
-                            ),
                             itemCount: widget.filteredMaidList == null ||
                                     widget.filteredMaidList!.isEmpty
                                 ? maidList.length
@@ -373,7 +367,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                               } else {
                                 maid = widget.filteredMaidList![index];
                               }
-                              return buildGridItem(maid);
+                              return buildGridItem(maid, index);
                             },
                           )
 
@@ -442,7 +436,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
               } else {
                 maid = widget.filteredMaidList![index];
               }
-              return buildGridItem(maid);
+              return buildGridItem(maid, index);
             },
           )
 
@@ -507,6 +501,9 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidLocation: LocationFilter(location: "New York"),
       maidEducation: EducationFilter(education: "High School"),
       maidRating: RatingFilter(minRating: 4.8),
+      serviceItems: [
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+      ],
     ),
     Maid(
       maidName: "Emily Johnson",
@@ -515,6 +512,9 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidLocation: LocationFilter(location: "Los Angeles"),
       maidEducation: EducationFilter(education: "Bachelor's Degree"),
       maidRating: RatingFilter(minRating: 4.5),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+      ],
     ),
     Maid(
       maidName: "Sophia Williams",
@@ -523,20 +523,29 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidLocation: LocationFilter(location: "Chicago"),
       maidEducation: EducationFilter(education: "Associate's Degree"),
       maidRating: RatingFilter(minRating: 4.3),
+      serviceItems: [
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+      ],
     ),
     // Add more Maid objects as needed
   ];
 
-  Widget buildGridItem(Maid maid) {
+  Widget buildGridItem(Maid maid, int index) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       child: InkWell(
         onTap: () {
-          // Handle onTap action
+          // selectCartList.clear();
+          Get.to(() => Servicedetail(
+                    maid: maid,
+                  ))!
+              .then((value) {
+            FocusScope.of(context).requestFocus(FocusNode());
+          });
         },
         child: SizedBox(
           width: 160,
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
@@ -548,54 +557,82 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                   width: 150,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                maid.maidName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: CustomColors.fontFamily,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 3),
-              const Text(
-                "Starts From",
-                style: TextStyle(
-                  fontFamily: CustomColors.fontFamily,
-                  fontWeight: FontWeight.w500,
-                  color: CustomColors.grey,
-                  fontSize: 12,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              SizedBox(width: 10), // Add some space between image and content
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 80,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: CustomColors.accentColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "₹${maid.maidPrice.minPrice}",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(ImagePath.starImg, scale: 22),
+                          SizedBox(
+                              width:
+                                  4), // Adjust spacing between star and rating text
+                          Text(
+                            maid.maidRating.minRating.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                fontSize: 16),
+                          ),
+                        ],
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 98.0),
+                        child: Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    maid.maidName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: CustomColors.fontFamily,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
                     ),
                   ),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Image.asset(ImagePath.starImg, scale: 22),
+                      Wrap(
+                        spacing: 6,
+                        children: maid.serviceItems
+                            .map((item) => Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 4, horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: CustomColors.accentColor,
+                                  ),
+                                  child: Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
                       Text(
-                        maid.maidRating.minRating.toString(),
+                        maxLines: 1,
+                        maid.maidPrice.toString(),
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w700, color: Colors.white),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 1,
+                            color: Colors.transparent),
                       ),
                     ],
                   ),
@@ -614,7 +651,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       child: InkWell(
         onTap: () {
           setState(() {});
-          selectCartList.clear();
+          // selectCartList.clear();
           Get.to(() => SalonAtHomeForWomanScreen(
                   title: widget.catTital,
                   storeName: vendorlist[index]["provider_title"],
@@ -695,7 +732,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       child: InkWell(
         onTap: () {
           setState(() {});
-          selectCartList.clear();
+          // selectCartList.clear();
           Get.to(() => SalonAtHomeForWomanScreen(
                   title: widget.catTital,
                   storeName: users?[index].providerTitle,

@@ -46,6 +46,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidLocation: LocationFilter(location: "New York"),
       maidEducation: EducationFilter(education: "High School"),
       maidRating: RatingFilter(minRating: 4.8),
+      serviceItems: [
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.jpg'),
+      ],
     ),
     Maid(
       maidName: "Emily Johnson",
@@ -54,6 +57,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidLocation: LocationFilter(location: "Los Angeles"),
       maidEducation: EducationFilter(education: "Bachelor's Degree"),
       maidRating: RatingFilter(minRating: 4.5),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.jpg'),
+      ],
     ),
     Maid(
       maidName: "Sophia Williams",
@@ -62,6 +68,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidLocation: LocationFilter(location: "Chicago"),
       maidEducation: EducationFilter(education: "Associate's Degree"),
       maidRating: RatingFilter(minRating: 4.3),
+      serviceItems: [
+        ServiceItem(name: 'Child Care', image: 'assets/childcare.jpg'),
+      ],
     ),
     // Add more Maid objects as needed
   ];

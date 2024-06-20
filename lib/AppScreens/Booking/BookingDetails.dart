@@ -2,7 +2,6 @@
 // ignore_for_file: file_names, duplicate_ignore, deprecated_member_use, depend_on_referenced_packages, avoid_print, unrelated_type_equality_checks, unnecessary_string_interpolations, prefer_const_constructors, no_duplicate_case_values, dead_code
 
 import 'dart:convert';
-
 import 'package:fdottedline_nullsafety/fdottedline__nullsafety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
