@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:mr_urban_customer_app/utils/text_widget.dart';

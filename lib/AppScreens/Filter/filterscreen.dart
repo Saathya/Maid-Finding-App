@@ -47,7 +47,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidEducation: EducationFilter(education: "High School"),
       maidRating: RatingFilter(minRating: 4.8),
       serviceItems: [
-        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.jpg'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
       ],
     ),
     Maid(
@@ -58,7 +60,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidEducation: EducationFilter(education: "Bachelor's Degree"),
       maidRating: RatingFilter(minRating: 4.5),
       serviceItems: [
-        ServiceItem(name: 'Cooking', image: 'assets/cooking.jpg'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
       ],
     ),
     Maid(
@@ -69,7 +73,9 @@ class _FilterscreenState extends State<Filterscreen> {
       maidEducation: EducationFilter(education: "Associate's Degree"),
       maidRating: RatingFilter(minRating: 4.3),
       serviceItems: [
-        ServiceItem(name: 'Child Care', image: 'assets/childcare.jpg'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
       ],
     ),
     // Add more Maid objects as needed
@@ -117,21 +123,21 @@ class _FilterscreenState extends State<Filterscreen> {
 
       if (meetsCriteria) {
         print("Maid ${maid.maidName} does meet filter criteria:");
-        if (!prices.any((price) =>
+        if (prices.any((price) =>
             price.isSelected && maid.maidPrice.minPrice >= price.minPrice)) {
           print(" - Price: ${maid.maidPrice.minPrice}");
         }
-        if (!dummyLocations.any((location) =>
+        if (dummyLocations.any((location) =>
             location.isSelected &&
             maid.maidLocation.location == location.location)) {
           print(" - Location: ${maid.maidLocation.location}");
         }
-        if (!dummyEducations.any((education) =>
+        if (dummyEducations.any((education) =>
             education.isSelected &&
             maid.maidEducation.education == education.education)) {
           print(" - Education: ${maid.maidEducation.education}");
         }
-        if (!dummyRatings.any((rating) =>
+        if (dummyRatings.any((rating) =>
             rating.isSelected &&
             maid.maidRating.minRating >= rating.minRating)) {
           print(" - Rating: ${maid.maidRating.minRating}");

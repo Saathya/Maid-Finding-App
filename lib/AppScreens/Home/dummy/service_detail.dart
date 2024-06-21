@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously, unused_local_variable
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:mr_urban_customer_app/AppScreens/Booking/Booking.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
-import 'package:mr_urban_customer_app/model/dummy/service.dart'; // Replace with your service model
+import 'package:mr_urban_customer_app/model/dummy/service.dart';
+import 'package:mr_urban_customer_app/utils/color_widget.dart';
+import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
+import 'package:permission_handler/permission_handler.dart'; // Replace with your service model
 
 class Servicedetail extends StatefulWidget {
   final Maid maid;
@@ -14,27 +17,33 @@ class Servicedetail extends StatefulWidget {
 }
 
 class _ServicedetailState extends State<Servicedetail> {
-  void addToCart(BuildContext context) async {
+  void addToCart(BuildContext context, Maid maid) async {
     // Check if the maid is already in the cart
     List<Maid> cartItems = await CartService.getCartItems();
     bool isAlreadyInCart =
-        cartItems.any((item) => item.maidName == widget.maid.maidName);
+        cartItems.any((item) => item.maidName == maid.maidName);
 
     if (isAlreadyInCart) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          '${widget.maid.maidName} is already booked',
+          '${maid.maidName} is already booked',
           style: const TextStyle(
-              fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontSize: 16,
+          ),
         ),
       ));
     } else {
-      await CartService.addToCart(widget.maid);
+      await CartService.addToCart(maid);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          '${widget.maid.maidName} is booked',
+          '${maid.maidName} is booked',
           style: const TextStyle(
-              fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontSize: 16,
+          ),
         ),
       ));
     }
@@ -52,7 +61,7 @@ class _ServicedetailState extends State<Servicedetail> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          " Book Your Service",
+          "Book Your Service",
           style: TextStyle(
               fontSize: 25, fontWeight: FontWeight.w600, color: Colors.black),
         ),
@@ -126,38 +135,28 @@ class _ServicedetailState extends State<Servicedetail> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     const Text(
-                  //       'Original Price',
-                  //       style: TextStyle(
-                  //         fontSize: 16,
-                  //         color: Colors.grey,
-                  //       ),
-                  //     ),
-                  //     Text(
-                  //       '₹${widget.maid.maidPrice.minPrice.toString()}',
-                  //       style: const TextStyle(
-                  //         fontSize: 16,
-                  //         color: Colors.grey,
-                  //         decoration: TextDecoration.lineThrough,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+                  const SizedBox(height: 24),
+                  gridViewProduct(widget.maid.serviceItems),
+                  const SizedBox(height: 24),
+                  const Text(
+                    "Bestseller Maids",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  listViewMaidData(),
                   const SizedBox(height: 24),
                 ],
               ),
             ),
-            gridViewProduct(widget.maid.serviceItems),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          addToCart(context);
-
+          addToCart(context, widget.maid);
           Get.to(() => const BottomNavigationBarScreen());
         },
         label: const Text(
@@ -225,5 +224,166 @@ class _ServicedetailState extends State<Servicedetail> {
         );
       },
     );
+  }
+
+  Widget listViewMaidData() {
+    // Assuming you have a list of bestseller packages excluding the current maid
+    List<Maid> bestsellers = getBestsellersExcludingCurrent(widget.maid);
+
+    return ListView.builder(
+      itemCount: bestsellers.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  bestsellers[index].maidImg,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bestsellers[index].maidName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Wrap(
+                        spacing: 6,
+                        children: widget.maid.serviceItems
+                            .map((item) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4, horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: CustomColors.accentColor,
+                                  ),
+                                  child: Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(ImagePath.starImg, scale: 30),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${bestsellers[index].maidRating.minRating.toString()} mins',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            addToCart(context, bestsellers[index]);
+                            Get.to(() => const BottomNavigationBarScreen());
+                          },
+                          child: Container(
+                            width: 55,
+                            height: 25,
+                            decoration: BoxDecoration(
+                              color: Colors
+                                  .white, // Changed background color to blue
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: const Center(
+                              // Centered text
+                              child: Text(
+                                'Add',
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                    fontWeight:
+                                        FontWeight.bold), // Modified text style
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  List<Maid> getBestsellersExcludingCurrent(Maid currentMaid) {
+    // Sample list of bestseller maids
+    List<Maid> allBestsellers = [
+      Maid(
+        maidName: "Alice Smith",
+        maidImg: "assets/img-3.jpg",
+        maidPrice: PriceFilter(minPrice: 15000),
+        maidLocation: LocationFilter(location: "New York"),
+        maidEducation: EducationFilter(education: "High School"),
+        maidRating: RatingFilter(minRating: 4.8),
+        serviceItems: [
+          ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+          ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ],
+      ),
+      Maid(
+        maidName: "Emily Johnson",
+        maidImg: "assets/img2.jpg",
+        maidPrice: PriceFilter(minPrice: 10000),
+        maidLocation: LocationFilter(location: "Los Angeles"),
+        maidEducation: EducationFilter(education: "Bachelor's Degree"),
+        maidRating: RatingFilter(minRating: 4.5),
+        serviceItems: [
+          ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+          ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ],
+      ),
+      Maid(
+        maidName: "Sophia Williams",
+        maidImg: "assets/home img-1.jpg",
+        maidPrice: PriceFilter(minPrice: 18000),
+        maidLocation: LocationFilter(location: "Chicago"),
+        maidEducation: EducationFilter(education: "Associate's Degree"),
+        maidRating: RatingFilter(minRating: 4.3),
+        serviceItems: [
+          ServiceItem(name: '12 hr', image: 'assets/12.png'),
+          ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ],
+      ),
+      // Add more Maid objects as needed
+    ];
+    // Exclude the current maid from the list
+    return allBestsellers
+        .where((maid) => maid.maidName != currentMaid.maidName)
+        .toList();
   }
 }

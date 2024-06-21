@@ -98,6 +98,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
         oStatus = users["status"];
         buttonCol = CustomColors.gradientColor;
         break;
+      // ignore: unreachable_switch_case
       case "Pickup Order":
         oStatus = users["status"];
         buttonCol = CustomColors.RedColor;

@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, file_names, depend_on_referenced_packages, no_duplicate_case_values, use_super_parameters
+// ignore_for_file: unused_import, file_names, depend_on_referenced_packages, no_duplicate_case_values, use_super_parameters, use_build_context_synchronously, unreachable_switch_case
 
 import 'dart:convert';
 import 'dart:developer';
@@ -126,7 +126,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
               child: Image.asset(
                 maid.maidImg,
                 fit: BoxFit.cover,
-                height: 160,
+                height: 120,
                 width: 120,
               ),
             ),
@@ -141,7 +141,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(ImagePath.starImg, scale: 22),
+                        Image.asset(ImagePath.starImg, scale: 30),
                         const SizedBox(
                             width:
                                 4), // Adjust spacing between star and rating text
@@ -150,14 +150,14 @@ class _ActiveScreenState extends State<ActiveScreen> {
                           style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
-                              fontSize: 16),
+                              fontSize: 14),
                         ),
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 58.0),
+                      padding: const EdgeInsets.only(left: 69.0),
                       child: Container(
-                        height: 35,
+                        height: 25,
                         width: 80,
                         padding: const EdgeInsets.symmetric(horizontal: 14),
                         decoration: BoxDecoration(
@@ -178,7 +178,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Text(
                   maid.maidName,
                   maxLines: 1,
@@ -187,10 +187,10 @@ class _ActiveScreenState extends State<ActiveScreen> {
                     color: Colors.white,
                     fontFamily: CustomColors.fontFamily,
                     fontWeight: FontWeight.w600,
-                    fontSize: 20,
+                    fontSize: 15,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Wrap(
@@ -207,10 +207,11 @@ class _ActiveScreenState extends State<ActiveScreen> {
                                   item.name,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 16,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ))
+                          .take(2)
                           .toList(),
                     ),
                   ],
@@ -237,7 +238,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 28.0),
+                      padding: const EdgeInsets.only(left: 42.0),
                       child: InkWell(
                         onTap: () {
                           removeFromCart(maid); // Call remove function here

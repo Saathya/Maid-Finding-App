@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Filter/filterscreen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/dummy/service_detail.dart';
-import 'package:mr_urban_customer_app/AppScreens/Home/dummy/summary.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
+import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/Controller/AppControllerApi.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
@@ -80,6 +80,39 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
     }
   }
 
+  Maid? maid;
+  void addToCart(BuildContext context, Maid maid) async {
+    // Check if the maid is already in the cart
+    List<Maid> cartItems = await CartService.getCartItems();
+    bool isAlreadyInCart =
+        cartItems.any((item) => item.maidName == maid.maidName);
+
+    if (isAlreadyInCart) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          '${maid.maidName} is already booked',
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ));
+    } else {
+      await CartService.addToCart(maid);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          '${maid.maidName} is booked',
+          style: const TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+      ));
+    }
+  }
+
   late ColorNotifire notifire;
   vendorSearchApi(String? val) {
     setState(() {});
@@ -140,7 +173,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                       child: Container(
                         color: notifire.getprimerycolor,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
+                            horizontal: 8, vertical: 10),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
@@ -200,22 +233,30 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                          horizontal: 6, vertical: 10),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: IconButton(
+                        child: TextButton.icon(
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Filterscreen()));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Filterscreen()),
+                            );
                           },
                           icon: Icon(
                             Icons.filter_list_rounded,
                             color: Colors.white,
-                            size: 32,
+                            size: 28,
+                          ),
+                          label: Text(
+                            'Filter',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
@@ -503,6 +544,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidRating: RatingFilter(minRating: 4.8),
       serviceItems: [
         ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
       ],
     ),
     Maid(
@@ -514,6 +557,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidRating: RatingFilter(minRating: 4.5),
       serviceItems: [
         ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
       ],
     ),
     Maid(
@@ -525,6 +570,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       maidRating: RatingFilter(minRating: 4.3),
       serviceItems: [
         ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
       ],
     ),
     // Add more Maid objects as needed
@@ -553,8 +600,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                 child: Image.asset(
                   maid.maidImg,
                   fit: BoxFit.cover,
-                  height: 140,
-                  width: 150,
+                  height: 80,
+                  width: 100,
                 ),
               ),
               SizedBox(width: 10), // Add some space between image and content
@@ -567,7 +614,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(ImagePath.starImg, scale: 22),
+                          Image.asset(ImagePath.starImg, scale: 30),
                           SizedBox(
                               width:
                                   4), // Adjust spacing between star and rating text
@@ -576,21 +623,27 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                             style: const TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
-                                fontSize: 16),
+                                fontSize: 14),
                           ),
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 98.0),
-                        child: Icon(
-                          Icons.shopping_bag_outlined,
-                          size: 25,
-                          color: Colors.white,
+                        padding: const EdgeInsets.only(left: 150.0),
+                        child: InkWell(
+                          onTap: () {
+                            addToCart(context, maid);
+                            Get.to(() => const BottomNavigationBarScreen());
+                          },
+                          child: Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 22,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     maid.maidName,
                     maxLines: 1,
@@ -599,10 +652,10 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                       color: Colors.white,
                       fontFamily: CustomColors.fontFamily,
                       fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontSize: 15,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
                       Wrap(
@@ -619,10 +672,11 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                     item.name,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 16,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ))
+                            .take(2)
                             .toList(),
                       ),
                       Text(

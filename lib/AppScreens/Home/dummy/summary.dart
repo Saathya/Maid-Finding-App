@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_print, prefer_const_constructors, unused_field, prefer_typing_uninitialized_variables, prefer_final_fields, unused_local_variable, unnecessary_brace_in_string_interps, unnecessary_string_interpolations, prefer_interpolation_to_compose_strings, depend_on_referenced_packages, unnecessary_null_comparison, prefer_adjacent_string_concatenation, prefer_is_empty, unrelated_type_equality_checks, deprecated_member_use
 
-import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,11 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:mr_urban_customer_app/ApiServices/Api_werper.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Booking/Booking.dart';
-import 'package:mr_urban_customer_app/AppScreens/Home/coupon.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/traking.dart';
