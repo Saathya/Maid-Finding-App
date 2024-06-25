@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/Api_werper.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Booking/Booking.dart';
+import 'package:mr_urban_customer_app/AppScreens/Booking/demo/booking.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/traking.dart';

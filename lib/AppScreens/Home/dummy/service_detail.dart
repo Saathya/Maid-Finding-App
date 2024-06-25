@@ -1,11 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, unused_local_variable
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/route_manager.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
-import 'package:permission_handler/permission_handler.dart'; // Replace with your service model
 
 class Servicedetail extends StatefulWidget {
   final Maid maid;
@@ -17,6 +17,17 @@ class Servicedetail extends StatefulWidget {
 }
 
 class _ServicedetailState extends State<Servicedetail> {
+  void _callNumber(String number) async {
+    try {
+      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+      print('Call initiated: $res');
+      // Optionally handle the result here
+    } catch (e) {
+      print('Failed to make a phone call: $e');
+      // Handle the exception as needed (e.g., show an error message)
+    }
+  }
+
   void addToCart(BuildContext context, Maid maid) async {
     // Check if the maid is already in the cart
     List<Maid> cartItems = await CartService.getCartItems();
@@ -138,40 +149,64 @@ class _ServicedetailState extends State<Servicedetail> {
                   const SizedBox(height: 24),
                   gridViewProduct(widget.maid.serviceItems),
                   const SizedBox(height: 24),
-                  const Text(
-                    "Bestseller Maids",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  listViewMaidData(),
-                  const SizedBox(height: 24),
+                  // const Text(
+                  //   "Bestseller Maids",
+                  //   style: TextStyle(
+                  //     fontSize: 20,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 16),
+                  // listViewMaidData(),
+                  // const SizedBox(height: 24),
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          addToCart(context, widget.maid);
-          Get.to(() => const BottomNavigationBarScreen());
-        },
-        label: const Text(
-          'Book Now',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              addToCart(context, widget.maid);
+              Get.to(() => const BottomNavigationBarScreen());
+            },
+            label: const Text(
+              'Book Now',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            icon: const Icon(
+              Icons.payment_rounded,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.blue,
           ),
-        ),
-        icon: const Icon(
-          Icons.payment_rounded,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.blue,
+          const SizedBox(width: 16), // Space between the buttons
+          FloatingActionButton.extended(
+            onPressed: () {
+              _callNumber(widget.maid.number);
+            },
+            label: const Text(
+              'Call Now',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            icon: const Icon(
+              Icons.call,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.green,
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -353,7 +388,9 @@ class _ServicedetailState extends State<Servicedetail> {
         serviceItems: [
           ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
           ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+          ServiceItem(name: '12 hr', image: 'assets/12.png'),
         ],
+        number: '+918287475473',
       ),
       Maid(
         maidName: "Emily Johnson",
@@ -365,7 +402,9 @@ class _ServicedetailState extends State<Servicedetail> {
         serviceItems: [
           ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
           ServiceItem(name: '12 hr', image: 'assets/12.png'),
+          ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
         ],
+        number: '+918178637168',
       ),
       Maid(
         maidName: "Sophia Williams",
@@ -377,10 +416,13 @@ class _ServicedetailState extends State<Servicedetail> {
         serviceItems: [
           ServiceItem(name: '12 hr', image: 'assets/12.png'),
           ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+          ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
         ],
+        number: '+917982402366',
       ),
       // Add more Maid objects as needed
     ];
+
     // Exclude the current maid from the list
     return allBestsellers
         .where((maid) => maid.maidName != currentMaid.maidName)

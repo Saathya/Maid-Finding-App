@@ -11,7 +11,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/vendorCat.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -69,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     walletrefar();
     // etdarkmodepreviousstate();
+    initSharedPreferences();
+
     getPackage();
     setState(() {});
     lat == null ? getUserLocation() : getUserLocation1();
@@ -76,6 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     super.initState();
   }
+
+  late SharedPreferences prefs; // Declare SharedPreferences instance
 
   void getPackage() async {
     //! App details get
@@ -94,28 +97,99 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  List<String> dummyCityNames = [
+    "Select City",
+    "New Delhi",
+    "Pune",
+    "Bengaluru",
+    "Mumbai"
+  ];
+
+  void initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    // Load previously selected city from SharedPreferences
+    first = prefs.getString('selectedCity') ?? "Select City";
+    setState(() {});
+  }
+
+  void saveSelectedCity(String selectedCity) {
+    prefs.setString('selectedCity', selectedCity);
+  }
+
   late ColorNotifire notifire;
   Future getUserLocation() async {
     isLoding = true;
     setState(() {});
+
+    // Check and request location permissions if needed
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
     permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {}
+
+    // Obtain current location
     var currentLocation = await locateUser();
-    debugPrint('location: ${currentLocation.latitude}');
+
+    // Retrieve latitude and longitude
     lat = currentLocation.latitude;
     long = currentLocation.longitude;
 
-    List<Placemark> addresses = await placemarkFromCoordinates(
-        currentLocation.latitude, currentLocation.longitude);
+    // Retrieve city name using Geocoding
     setState(() {
-      first = addresses.first.name;
+      // Update state variables
+      // Assuming you want to display the first city name
       uid = getData.read("UserLogin") != null
           ? getData.read("UserLogin")["id"] ?? "0"
           : "0";
       homePageApi();
+
+      // Show dropdown or popup menu with city names
+      if (first == "Select City") {
+        // Show city selection popup only if first is "Select City"
+        showCitySelectionPopup();
+      }
     });
+  }
+
+  void showCitySelectionPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select City'),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: DropdownButton<String>(
+              isExpanded: true,
+              underline: Container(
+                height: 1,
+                color: Colors.grey.shade400,
+              ),
+              icon: const Icon(Icons.arrow_drop_down),
+              iconSize: 36,
+              elevation: 8,
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+              value: first, // Initially selected city
+              onChanged: (String? selectedCity) {
+                setState(() {
+                  first = selectedCity!; // Update selected city
+                });
+                saveSelectedCity(first); // Save the current selected city
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              items:
+                  dummyCityNames.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future getUserLocation1() async {
@@ -170,26 +244,29 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           title: InkWell(
             onTap: () async {
-              Prediction? p = await PlacesAutocomplete.show(
-                context: context,
-                apiKey: Config.googleKey,
-                language: "en",
-                decoration: const InputDecoration(
-                  hintText: "Search for your location/society/apt",
-                  focusedBorder: InputBorder.none,
-                ),
-                components: [],
-              );
-              displayPrediction(p, context).then((value) {
-                homePageApi();
-              });
+              // Prediction? p = await PlacesAutocomplete.show(
+              //   context: context,
+              //   apiKey: Config.googleKey,
+              //   language: "en",
+              //   decoration: const InputDecoration(
+              //     hintText: "Search for your location/society/apt",
+              //     focusedBorder: InputBorder.none,
+              //   ),
+              //   components: [],
+              // );
+              // displayPrediction(p, context).then((value) {
+              //   homePageApi();
+              // });
+
+              // Show city selection popup only if first is "Select City"
+              showCitySelectionPopup();
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  TextString.currentLocation,
+                  "CURRENT CITY",
                   style: TextStyle(
                       fontFamily: CustomColors.fontFamily,
                       fontSize: 13,

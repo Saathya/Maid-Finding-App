@@ -1,32 +1,34 @@
-// ignore_for_file: unused_import, file_names, depend_on_referenced_packages, no_duplicate_case_values, use_super_parameters, use_build_context_synchronously, unreachable_switch_case
+// ignore_for_file: avoid_print, file_names
 
 import 'dart:convert';
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
-import 'package:mr_urban_customer_app/ApiServices/url.dart';
-import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
+import 'package:mr_urban_customer_app/ApiServices/Api_werper.dart';
+import 'package:mr_urban_customer_app/AppScreens/Booking/BookingDetails.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
+import 'package:mr_urban_customer_app/utils/AppWidget.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
-import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import '../../ApiServices/Api_werper.dart';
-import '../../utils/AppWidget.dart';
-import 'BookingDetails.dart';
-import 'CancelledPage.dart';
-import 'oldCancel.dart';
+import 'package:mr_urban_customer_app/ApiServices/url.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 
-class ActiveScreen extends StatefulWidget {
-  const ActiveScreen({Key? key}) : super(key: key);
+import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
+
+import 'package:http/http.dart' as http;
+
+class BookingScreen extends StatefulWidget {
+  final String? type;
+  const BookingScreen({Key? key, this.type}) : super(key: key);
 
   @override
-  State<ActiveScreen> createState() => _ActiveScreenState();
+  State<BookingScreen> createState() => _BookingScreenState();
 }
 
-class _ActiveScreenState extends State<ActiveScreen> {
+class _BookingScreenState extends State<BookingScreen> {
   String? oStatus = '';
   Color? buttonColor;
   @override
@@ -49,6 +51,17 @@ class _ActiveScreenState extends State<ActiveScreen> {
     setState(() {
       maidData = pendingMaidData; // Update state with filtered data
     });
+  }
+
+  void _callNumber(String number) async {
+    try {
+      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+      print('Call initiated: $res');
+      // Optionally handle the result here
+    } catch (e) {
+      print('Failed to make a phone call: $e');
+      // Handle the exception as needed (e.g., show an error message)
+    }
   }
 
   void removeFromCart(Maid maid) async {
@@ -77,47 +90,83 @@ class _ActiveScreenState extends State<ActiveScreen> {
   @override
   Widget build(BuildContext context) {
     notifire = Provider.of<ColorNotifire>(context, listen: true);
-    return Scaffold(
-      backgroundColor: notifire.getprimerycolor,
-      body: FutureBuilder(
-        future: bookingActiveApi(),
-        builder: (context, AsyncSnapshot snap) {
-          if (snap.hasData) {
-            var users = snap.data;
-            return users.length != 0
-                ? ListView.builder(
-                    itemCount: users.length,
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, i) {
-                      return activeList(users[i]);
-                    },
+    return SafeArea(
+        child: Scaffold(
+            backgroundColor: notifire.getprimerycolor,
+            appBar: AppBar(
+              centerTitle: true,
+              elevation: 0,
+              leading: widget.type == "hide"
+                  ? InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child:
+                          Icon(Icons.arrow_back, color: notifire.getdarkscolor))
+                  : const SizedBox(),
+              backgroundColor: notifire.getprimerycolor,
+              title: Text("Sort",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: notifire.getdarkscolor)),
+            ),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: notifire.getprimerycolor,
+                        borderRadius: BorderRadius.circular(1.0)),
+                    child: FutureBuilder(
+                      future: bookingActiveApi(),
+                      builder: (context, AsyncSnapshot snap) {
+                        if (snap.hasData) {
+                          var users = snap.data;
+                          return users.length != 0
+                              ? ListView.builder(
+                                  itemCount: users.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (ctx, i) {
+                                    return activeList(users[i]);
+                                  },
+                                )
+                              : maidDataListView();
+                        } else {
+                          return Center(child: isLoadingIndicator());
+                        }
+                      },
+                    ),
                   )
-                : maidDataListView();
-          } else {
-            return Center(child: isLoadingIndicator());
-          }
-        },
-      ),
-    );
+                ]))));
   }
 
   Widget maidDataListView() {
-    return maidData.isNotEmpty
-        ? ListView.builder(
+    if (maidData.isNotEmpty) {
+      return Column(
+        children: [
+          ListView.builder(
             itemCount: maidData.length,
             shrinkWrap: true,
             itemBuilder: (ctx, i) {
               return buildGridItem(maidData[i], i);
             },
-          )
-        : emptyBooking();
+          ),
+        ],
+      );
+    } else {
+      return Center(
+        child: emptyBooking(),
+      );
+    }
   }
 
   Widget buildGridItem(Maid maid, int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 2),
       child: SizedBox(
-        width: 160,
+        width: 220,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -127,7 +176,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
                 maid.maidImg,
                 fit: BoxFit.cover,
                 height: 120,
-                width: 120,
+                width: 110,
               ),
             ),
             const SizedBox(
@@ -155,7 +204,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 69.0),
+                      padding: const EdgeInsets.only(left: 89.0),
                       child: Container(
                         height: 25,
                         width: 80,
@@ -214,77 +263,79 @@ class _ActiveScreenState extends State<ActiveScreen> {
                           .take(2)
                           .toList(),
                     ),
-                    GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 6),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: CustomColors.accentColor,
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.call,
-                                color: Colors.black,
-                                size: 16,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Call Now',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                    fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        )),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       height: 30,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12), // Adjusted padding
                       decoration: BoxDecoration(
-                          color: CustomColors.orangeColor,
-                          borderRadius: BorderRadius.circular(30)),
+                        color: CustomColors.orangeColor,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                       child: Center(
                         child: Text(
                           maid.paymentStatus,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: CustomColors.fontFamily),
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: CustomColors.fontFamily,
+                          ),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 42.0),
-                      child: InkWell(
-                        onTap: () {
-                          removeFromCart(maid); // Call remove function here
-                        },
-                        child: Container(
-                          height: 30,
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          decoration: BoxDecoration(
-                              color: CustomColors.red,
-                              borderRadius: BorderRadius.circular(30)),
-                          child: const Center(
-                            child: Text(
-                              'Remove',
-                              textAlign: TextAlign.center,
+                    GestureDetector(
+                      onTap: () {
+                        _callNumber(maid.number);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8), // Adjusted padding
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: CustomColors.accentColor,
+                        ),
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Call Now',
                               style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: CustomColors.fontFamily),
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        removeFromCart(maid); // Call remove function here
+                      },
+                      child: Container(
+                        height: 30,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12), // Adjusted padding
+                        decoration: BoxDecoration(
+                          color: CustomColors.red,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Remove',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: CustomColors.fontFamily,
                             ),
                           ),
                         ),
@@ -443,6 +494,22 @@ class _ActiveScreenState extends State<ActiveScreen> {
           ]),
         ),
       ),
+    );
+  }
+
+  Widget showDialogBox() {
+    return AlertDialog(
+      title: const Text("Please Login"),
+      actions: <Widget>[
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel')),
+        TextButton(
+          onPressed: () {},
+          child: const Text('Login Page',
+              style: TextStyle(color: Colors.blueAccent)),
+        ),
+      ],
     );
   }
 

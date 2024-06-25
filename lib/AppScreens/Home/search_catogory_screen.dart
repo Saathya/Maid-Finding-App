@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Filter/filterscreen.dart';
@@ -535,11 +536,12 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
   }
 
   List<Maid> maidList = [
+    // New Delhi maids
     Maid(
       maidName: "Alice Smith",
-      maidImg: "assets/img-3.jpg",
+      maidImg: "assets/home img-1.jpg",
       maidPrice: PriceFilter(minPrice: 15000),
-      maidLocation: LocationFilter(location: "New York"),
+      maidLocation: LocationFilter(location: "New Delhi"),
       maidEducation: EducationFilter(education: "High School"),
       maidRating: RatingFilter(minRating: 4.8),
       serviceItems: [
@@ -547,46 +549,138 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
         ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
         ServiceItem(name: '12 hr', image: 'assets/12.png'),
       ],
+      number: '7827783630',
     ),
     Maid(
-      maidName: "Emily Johnson",
-      maidImg: "assets/img2.jpg",
-      maidPrice: PriceFilter(minPrice: 10000),
-      maidLocation: LocationFilter(location: "Los Angeles"),
+      maidName: "John Doe",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 12000),
+      maidLocation: LocationFilter(location: "New Delhi"),
       maidEducation: EducationFilter(education: "Bachelor's Degree"),
       maidRating: RatingFilter(minRating: 4.5),
       serviceItems: [
-        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
-        ServiceItem(name: '12 hr', image: 'assets/12.png'),
         ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
       ],
+      number: '7894561230',
     ),
+
+    // Pune maids
     Maid(
-      maidName: "Sophia Williams",
+      maidName: "Emily Johnson",
       maidImg: "assets/home img-1.jpg",
       maidPrice: PriceFilter(minPrice: 18000),
-      maidLocation: LocationFilter(location: "Chicago"),
+      maidLocation: LocationFilter(location: "Pune"),
       maidEducation: EducationFilter(education: "Associate's Degree"),
       maidRating: RatingFilter(minRating: 4.3),
       serviceItems: [
-        ServiceItem(name: '12 hr', image: 'assets/12.png'),
-        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
         ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '24hr', image: 'assets/24-hours.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
       ],
+      number: '7982402366',
     ),
-    // Add more Maid objects as needed
+    Maid(
+      maidName: "Sophia Williams",
+      maidImg: "assets/img2.jpg",
+      maidPrice: PriceFilter(minPrice: 16000),
+      maidLocation: LocationFilter(location: "Pune"),
+      maidEducation: EducationFilter(education: "High School"),
+      maidRating: RatingFilter(minRating: 4.6),
+      serviceItems: [
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'childcare', image: 'assets/hands.png'),
+      ],
+      number: '7982402366',
+    ),
+
+    // Mumbai maids
+    Maid(
+      maidName: "Olivia Brown",
+      maidImg: "assets/img2.jpg",
+      maidPrice: PriceFilter(minPrice: 17000),
+      maidLocation: LocationFilter(location: "Mumbai"),
+      maidEducation: EducationFilter(education: "Master's Degree"),
+      maidRating: RatingFilter(minRating: 4.9),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+      ],
+      number: '7890123456',
+    ),
+    Maid(
+      maidName: "William Davis",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 15000),
+      maidLocation: LocationFilter(location: "Mumbai"),
+      maidEducation: EducationFilter(education: "Diploma"),
+      maidRating: RatingFilter(minRating: 4.2),
+      serviceItems: [
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+      ],
+      number: '7890123456',
+    ),
+
+    // Bengaluru maids
+    Maid(
+      maidName: "Emma Wilson",
+      maidImg: "assets/home img-1.jpg",
+      maidPrice: PriceFilter(minPrice: 14000),
+      maidLocation: LocationFilter(location: "Bengaluru"),
+      maidEducation: EducationFilter(education: "PhD"),
+      maidRating: RatingFilter(minRating: 4.7),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+      ],
+      number: '7896541230',
+    ),
+    Maid(
+      maidName: "James Miller",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 16000),
+      maidLocation: LocationFilter(location: "Bengaluru"),
+      maidEducation: EducationFilter(education: "Bachelor's Degree"),
+      maidRating: RatingFilter(minRating: 4.4),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'childcare', image: 'assets/hands.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
+      ],
+      number: '7896541230',
+    ),
   ];
 
   Widget buildGridItem(Maid maid, int index) {
+    void callNumber(String number) async {
+      try {
+        bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+        print('Call initiated: $res');
+        // Optionally handle the result here
+      } catch (e) {
+        print('Failed to make a phone call: $e');
+        // Handle the exception as needed (e.g., show an error message)
+      }
+    }
+
+    // Filter maids based on selected city
+    if (first != "Select City" && maid.maidLocation.location != first) {
+      return SizedBox
+          .shrink(); // Return empty space if maid's city doesn't match
+    }
+
+    // Existing buildGridItem implementation remains the same
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       child: InkWell(
         onTap: () {
-          // selectCartList.clear();
-          Get.to(() => Servicedetail(
-                    maid: maid,
-                  ))!
-              .then((value) {
+          Get.to(() => Servicedetail(maid: maid))!.then((value) {
             FocusScope.of(context).requestFocus(FocusNode());
           });
         },
@@ -604,7 +698,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                   width: 100,
                 ),
               ),
-              SizedBox(width: 10), // Add some space between image and content
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -615,9 +709,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Image.asset(ImagePath.starImg, scale: 30),
-                          SizedBox(
-                              width:
-                                  4), // Adjust spacing between star and rating text
+                          SizedBox(width: 4),
                           Text(
                             maid.maidRating.minRating.toString(),
                             style: const TextStyle(
@@ -627,37 +719,67 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                           ),
                         ],
                       ),
+                      // Sorting functionality
                       Padding(
-                        padding: const EdgeInsets.only(left: 150.0),
+                        padding: const EdgeInsets.only(left: 120.0),
                         child: InkWell(
                           onTap: () {
                             addToCart(context, maid);
                             Get.to(() => const BottomNavigationBarScreen());
                           },
-                          child: Icon(
-                            Icons.shopping_bag_outlined,
-                            size: 22,
-                            color: Colors.white,
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.shopping_bag_outlined,
+                                size: 22,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'Sort',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    maid.maidName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: CustomColors.fontFamily,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        maid.maidName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: CustomColors.fontFamily,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      // Displaying maid price
+                      Text(
+                        maid.maidPrice.minPrice.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 1,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Displaying up to 2 service items
                       Wrap(
                         spacing: 6,
                         children: maid.serviceItems
@@ -676,17 +798,42 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                     ),
                                   ),
                                 ))
-                            .take(2)
+                            .take(2) // Limiting to 2 service items
                             .toList(),
                       ),
-                      Text(
-                        maxLines: 1,
-                        maid.maidPrice.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 1,
-                            color: Colors.transparent),
+                      // Call button
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            callNumber(maid.number);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: CustomColors.accentColor,
+                            ),
+                            child: Row(
+                              children: const [
+                                Icon(
+                                  Icons.call,
+                                  color: Colors.black,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Call Now',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                      fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/AppScreens/Account/account_screen.dart';
+import 'package:mr_urban_customer_app/AppScreens/Booking/demo/booking.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/loginAuth/login_screen.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';

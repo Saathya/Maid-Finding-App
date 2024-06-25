@@ -17,10 +17,10 @@ class _FilterscreenState extends State<Filterscreen> {
   ];
 
   List<LocationFilter> dummyLocations = [
-    LocationFilter(location: "New York"),
-    LocationFilter(location: "Los Angeles"),
-    LocationFilter(location: "Chicago"),
-    LocationFilter(location: "Houston"),
+    LocationFilter(location: "New Delhi"),
+    LocationFilter(location: "Mumbai"),
+    LocationFilter(location: "Bengaluru"),
+    LocationFilter(location: "Pune"),
   ];
 
   List<EducationFilter> dummyEducations = [
@@ -38,12 +38,14 @@ class _FilterscreenState extends State<Filterscreen> {
   ];
 
   // Placeholder for maidList; replace with actual list of maids
+
   List<Maid> maidList = [
+    // New Delhi maids
     Maid(
       maidName: "Alice Smith",
-      maidImg: "assets/img-3.jpg",
+      maidImg: "assets/home img-1.jpg",
       maidPrice: PriceFilter(minPrice: 15000),
-      maidLocation: LocationFilter(location: "New York"),
+      maidLocation: LocationFilter(location: "New Delhi"),
       maidEducation: EducationFilter(education: "High School"),
       maidRating: RatingFilter(minRating: 4.8),
       serviceItems: [
@@ -51,34 +53,112 @@ class _FilterscreenState extends State<Filterscreen> {
         ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
         ServiceItem(name: '12 hr', image: 'assets/12.png'),
       ],
+      number: '7827783630',
     ),
     Maid(
-      maidName: "Emily Johnson",
-      maidImg: "assets/img2.jpg",
-      maidPrice: PriceFilter(minPrice: 10000),
-      maidLocation: LocationFilter(location: "Los Angeles"),
+      maidName: "John Doe",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 12000),
+      maidLocation: LocationFilter(location: "New Delhi"),
       maidEducation: EducationFilter(education: "Bachelor's Degree"),
       maidRating: RatingFilter(minRating: 4.5),
       serviceItems: [
-        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
-        ServiceItem(name: '12 hr', image: 'assets/12.png'),
         ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
       ],
+      number: '7894561230',
     ),
+
+    // Pune maids
     Maid(
-      maidName: "Sophia Williams",
+      maidName: "Emily Johnson",
       maidImg: "assets/home img-1.jpg",
       maidPrice: PriceFilter(minPrice: 18000),
-      maidLocation: LocationFilter(location: "Chicago"),
+      maidLocation: LocationFilter(location: "Pune"),
       maidEducation: EducationFilter(education: "Associate's Degree"),
       maidRating: RatingFilter(minRating: 4.3),
       serviceItems: [
-        ServiceItem(name: '12 hr', image: 'assets/12.png'),
-        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
         ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: '24hr', image: 'assets/24-hours.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
       ],
+      number: '7982402366',
     ),
-    // Add more Maid objects as needed
+    Maid(
+      maidName: "Sophia Williams",
+      maidImg: "assets/img2.jpg",
+      maidPrice: PriceFilter(minPrice: 16000),
+      maidLocation: LocationFilter(location: "Pune"),
+      maidEducation: EducationFilter(education: "High School"),
+      maidRating: RatingFilter(minRating: 4.6),
+      serviceItems: [
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'childcare', image: 'assets/hands.png'),
+      ],
+      number: '7982402366',
+    ),
+
+    // Mumbai maids
+    Maid(
+      maidName: "Olivia Brown",
+      maidImg: "assets/img2.jpg",
+      maidPrice: PriceFilter(minPrice: 17000),
+      maidLocation: LocationFilter(location: "Mumbai"),
+      maidEducation: EducationFilter(education: "Master's Degree"),
+      maidRating: RatingFilter(minRating: 4.9),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: '12 hr', image: 'assets/12.png'),
+      ],
+      number: '7890123456',
+    ),
+    Maid(
+      maidName: "William Davis",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 15000),
+      maidLocation: LocationFilter(location: "Mumbai"),
+      maidEducation: EducationFilter(education: "Diploma"),
+      maidRating: RatingFilter(minRating: 4.2),
+      serviceItems: [
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+      ],
+      number: '7890123456',
+    ),
+
+    // Bengaluru maids
+    Maid(
+      maidName: "Emma Wilson",
+      maidImg: "assets/home img-1.jpg",
+      maidPrice: PriceFilter(minPrice: 14000),
+      maidLocation: LocationFilter(location: "Bengaluru"),
+      maidEducation: EducationFilter(education: "PhD"),
+      maidRating: RatingFilter(minRating: 4.7),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'Cleaning', image: 'assets/cleaning.png'),
+        ServiceItem(name: 'maid', image: 'assets/maid.png'),
+      ],
+      number: '7896541230',
+    ),
+    Maid(
+      maidName: "James Miller",
+      maidImg: "assets/img-3.jpg",
+      maidPrice: PriceFilter(minPrice: 16000),
+      maidLocation: LocationFilter(location: "Bengaluru"),
+      maidEducation: EducationFilter(education: "Bachelor's Degree"),
+      maidRating: RatingFilter(minRating: 4.4),
+      serviceItems: [
+        ServiceItem(name: 'Cooking', image: 'assets/cooking.png'),
+        ServiceItem(name: 'childcare', image: 'assets/hands.png'),
+        ServiceItem(name: '24 hr', image: 'assets/24-hours.png'),
+      ],
+      number: '7896541230',
+    ),
   ];
 
   void resetFilters() {
@@ -106,14 +186,14 @@ class _FilterscreenState extends State<Filterscreen> {
   }
 
   void applyFilters() {
+    //  dummyLocations.any((location) =>
+    //           location.isSelected &&
+    //           maid.maidLocation.location == location.location)
     // Filter your maidList based on selected filters
     List<Maid> filteredMaidList = maidList.where((maid) {
       // Check if maid meets all selected filter criteria
       bool meetsCriteria = prices.any((price) =>
               price.isSelected && maid.maidPrice.minPrice >= price.minPrice) ||
-          dummyLocations.any((location) =>
-              location.isSelected &&
-              maid.maidLocation.location == location.location) ||
           dummyEducations.any((education) =>
               education.isSelected &&
               maid.maidEducation.education == education.education) ||
@@ -127,11 +207,11 @@ class _FilterscreenState extends State<Filterscreen> {
             price.isSelected && maid.maidPrice.minPrice >= price.minPrice)) {
           print(" - Price: ${maid.maidPrice.minPrice}");
         }
-        if (dummyLocations.any((location) =>
-            location.isSelected &&
-            maid.maidLocation.location == location.location)) {
-          print(" - Location: ${maid.maidLocation.location}");
-        }
+        // if (dummyLocations.any((location) =>
+        //     location.isSelected &&
+        //     maid.maidLocation.location == location.location)) {
+        //   print(" - Location: ${maid.maidLocation.location}");
+        // }
         if (dummyEducations.any((education) =>
             education.isSelected &&
             maid.maidEducation.education == education.education)) {
@@ -206,10 +286,10 @@ class _FilterscreenState extends State<Filterscreen> {
               buildSectionTitle("Education"),
               const SizedBox(height: 10),
               CustomEducationFilter(educations: dummyEducations),
-              const SizedBox(height: 20),
-              buildSectionTitle("Location"),
-              const SizedBox(height: 10),
-              CustomLocationFilter(locations: dummyLocations),
+              // const SizedBox(height: 20),
+              // buildSectionTitle("Location"),
+              // const SizedBox(height: 10),
+              // CustomLocationFilter(locations: dummyLocations),
               const SizedBox(height: 20),
               buildSectionTitle("Rating"),
               const SizedBox(height: 10),

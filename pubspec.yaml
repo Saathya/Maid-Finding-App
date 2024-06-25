@@ -74,6 +74,8 @@ dependencies:
   animated_text_kit: ^4.2.2
   animation_search_bar: ^0.0.9
   google_sign_in: ^6.2.1
+  flutter_phone_direct_caller: ^2.1.1
+
 
 
 

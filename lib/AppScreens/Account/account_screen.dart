@@ -15,7 +15,7 @@ import 'package:mr_urban_customer_app/ApiServices/api_call_service.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Account/faqs_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Account/privacy_policy_screen.dart';
-import 'package:mr_urban_customer_app/AppScreens/Booking/Booking.dart';
+import 'package:mr_urban_customer_app/AppScreens/Booking/demo/booking.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/custom_widegt/Colors.dart';
 import 'package:mr_urban_customer_app/loginAuth/login_screen.dart';

@@ -10,6 +10,7 @@ class Maid {
   RatingFilter maidRating;
   List<ServiceItem> serviceItems;
   String paymentStatus; // Add this field
+  String number; // Add this field
 
   Maid({
     required this.maidName,
@@ -20,6 +21,7 @@ class Maid {
     required this.maidRating,
     required this.serviceItems,
     this.paymentStatus = 'pending', // Initialize with default value
+    required this.number, // Initialize with required value
   });
 
   // Convert to/from JSON if needed
@@ -35,6 +37,7 @@ class Maid {
           .map((item) => ServiceItem.fromJson(item))
           .toList(),
       paymentStatus: json['paymentStatus'] ?? 'pending',
+      number: json['number'], // Add this field
     );
   }
 
@@ -48,6 +51,7 @@ class Maid {
       'maidRating': maidRating.toJson(),
       'serviceItems': serviceItems.map((item) => item.toJson()).toList(),
       'paymentStatus': paymentStatus,
+      'number': number, // Add this field
     };
   }
 }
