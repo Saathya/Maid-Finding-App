@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,10 +16,8 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../ApiServices/Api_werper.dart';
 import '../../ApiServices/url.dart';
-import 'flutter_google_places.dart';
 import '../../loginAuth/login_screen.dart';
 import '../../model/home_page_model.dart';
 import '../../utils/AppWidget.dart';
@@ -30,7 +27,6 @@ import '../../utils/text_widget.dart';
 import '../Account/account_screen.dart';
 import '../Notification/Notificationpage.dart';
 import 'SeeAll.dart';
-import 'SetLocation.dart';
 import 'ViewAllSection.dart';
 import 'search_catogory_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -39,8 +35,8 @@ String uid = "0";
 String? currency;
 String? referCredit;
 String? wallet;
-var lat;
-var long;
+var lat = 20.5937; // Default latitude for India
+var long = 78.9629;
 var first;
 
 class HomeScreen extends StatefulWidget {
@@ -69,14 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
     walletrefar();
     // etdarkmodepreviousstate();
     initSharedPreferences();
-
     getPackage();
     setState(() {});
-    lat == null ? getUserLocation() : getUserLocation1();
+    getUserLocation1();
     initPlatformState();
 
     super.initState();
   }
+
+  // lat == null ? getUserLocation() : getUserLocation1();
 
   late SharedPreferences prefs; // Declare SharedPreferences instance
 
@@ -117,38 +114,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   late ColorNotifire notifire;
-  Future getUserLocation() async {
-    isLoding = true;
-    setState(() {});
 
-    // Check and request location permissions if needed
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    permission = await Geolocator.requestPermission();
+  // Future getUserLocation() async {
+  //   isLoding = true;
+  //   setState(() {});
 
-    // Obtain current location
-    var currentLocation = await locateUser();
+  // // Check and request location permissions if needed
+  // LocationPermission permission;
+  // permission = await Geolocator.checkPermission();
+  // permission = await Geolocator.requestPermission();
 
-    // Retrieve latitude and longitude
-    lat = currentLocation.latitude;
-    long = currentLocation.longitude;
+  // // Obtain current location
+  // var currentLocation = await locateUser();
 
-    // Retrieve city name using Geocoding
-    setState(() {
-      // Update state variables
-      // Assuming you want to display the first city name
-      uid = getData.read("UserLogin") != null
-          ? getData.read("UserLogin")["id"] ?? "0"
-          : "0";
-      homePageApi();
+  // // Retrieve latitude and longitude
+  // lat = currentLocation.latitude;
+  // long = currentLocation.longitude;
 
-      // Show dropdown or popup menu with city names
-      if (first == "Select City") {
-        // Show city selection popup only if first is "Select City"
-        showCitySelectionPopup();
-      }
-    });
-  }
+  // Retrieve city name using Geocoding
+  // setState(() {
+  //   // Update state variables
+  //   // Assuming you want to display the first city name
+  //   uid = getData.read("UserLogin") != null
+  //       ? getData.read("UserLogin")["id"] ?? "0"
+  //       : "0";
+  //   homePageApi();
+
+  // Show dropdown or popup menu with city names
+  //   });
+  // }
 
   void showCitySelectionPopup() {
     showDialog(
@@ -195,12 +189,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Future getUserLocation1() async {
     isLoding = true;
     setState(() {});
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {}
-    var currentLocation = await locateUser();
-    debugPrint('location: ${currentLocation.latitude}');
+    // LocationPermission permission;
+    // permission = await Geolocator.checkPermission();
+    // permission = await Geolocator.requestPermission();
+    // if (permission == LocationPermission.denied) {}
+    // var currentLocation = await locateUser();
+    // debugPrint('location: ${currentLocation.latitude}');
+    if (first == "Select City") {
+      // Show city selection popup only if first is "Select City"
+      showCitySelectionPopup();
+    }
 
     setState(() {
       uid = getData.read("UserLogin") != null

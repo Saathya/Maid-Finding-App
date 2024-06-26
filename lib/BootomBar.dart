@@ -113,7 +113,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
                   scale: 19,
                   color: Colors.white,
                 ),
-                const Text('Booking',
+                const Text('Shortlist',
                     style: TextStyle(fontSize: 12, color: Colors.white)),
               ])),
               // Tab(

@@ -174,7 +174,7 @@ class _ServicedetailState extends State<Servicedetail> {
               Get.to(() => const BottomNavigationBarScreen());
             },
             label: const Text(
-              'Book Now',
+              'Shortlist',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,

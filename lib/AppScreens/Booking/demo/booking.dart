@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, file_names
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
@@ -15,9 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
-
 import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
-
 import 'package:http/http.dart' as http;
 
 class BookingScreen extends StatefulWidget {
@@ -105,7 +102,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           Icon(Icons.arrow_back, color: notifire.getdarkscolor))
                   : const SizedBox(),
               backgroundColor: notifire.getprimerycolor,
-              title: Text("Sort",
+              title: Text("Shortlist",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -175,8 +172,8 @@ class _BookingScreenState extends State<BookingScreen> {
               child: Image.asset(
                 maid.maidImg,
                 fit: BoxFit.cover,
-                height: 120,
-                width: 110,
+                height: 125,
+                width: 115,
               ),
             ),
             const SizedBox(
@@ -204,7 +201,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 89.0),
+                      padding: const EdgeInsets.only(left: 85.0),
                       child: Container(
                         height: 25,
                         width: 80,
@@ -228,16 +225,51 @@ class _BookingScreenState extends State<BookingScreen> {
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  maid.maidName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: CustomColors.fontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      maid.maidName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: CustomColors.fontFamily,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          _callNumber(maid.number);
+                        },
+                        child: const Row(
+                          children: [
+                            CircleAvatar(
+                              radius:
+                                  12, // Adjust the radius to your preference
+                              backgroundColor: Colors
+                                  .white, // Change the background color if needed
+                              child: Icon(
+                                Icons.call,
+                                color: Colors.black,
+                                size: 16,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              'Call Now',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 6),
                 Row(
@@ -267,7 +299,6 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       height: 30,
@@ -290,31 +321,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        _callNumber(maid.number);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8), // Adjusted padding
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: CustomColors.accentColor,
-                        ),
-                        child: const Row(
-                          children: [
-                            Text(
-                              'Call Now',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    const SizedBox(width: 15),
                     InkWell(
                       onTap: () {
                         removeFromCart(maid); // Call remove function here

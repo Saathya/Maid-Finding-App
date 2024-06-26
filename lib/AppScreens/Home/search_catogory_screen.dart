@@ -719,9 +719,10 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                           ),
                         ],
                       ),
+
                       // Sorting functionality
                       Padding(
-                        padding: const EdgeInsets.only(left: 120.0),
+                        padding: const EdgeInsets.only(left: 89.0),
                         child: InkWell(
                           onTap: () {
                             addToCart(context, maid);
@@ -736,7 +737,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                'Sort',
+                                'Shortlist',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
@@ -764,13 +765,35 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                         ),
                       ),
                       // Displaying maid price
-                      Text(
-                        maid.maidPrice.minPrice.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 1,
-                          color: Colors.transparent,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            callNumber(maid.number);
+                          },
+                          child: Row(
+                            children: const [
+                              CircleAvatar(
+                                radius:
+                                    10, // Adjust the radius to your preference
+                                backgroundColor: Colors
+                                    .white, // Change the background color if needed
+                                child: Icon(
+                                  Icons.call,
+                                  color: Colors.black,
+                                  size: 14,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'Call Now',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -801,40 +824,17 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                             .take(2) // Limiting to 2 service items
                             .toList(),
                       ),
-                      // Call button
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            callNumber(maid.number);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: CustomColors.accentColor,
-                            ),
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Icons.call,
-                                  color: Colors.black,
-                                  size: 16,
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  'Call Now',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.black,
-                                      fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
+
+                      Text(
+                        maid.maidPrice.minPrice.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 1,
+                          color: Colors.transparent,
                         ),
                       ),
+                      // Call button
                     ],
                   ),
                 ],
