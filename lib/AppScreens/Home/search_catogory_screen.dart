@@ -9,6 +9,7 @@ import 'package:mr_urban_customer_app/AppScreens/Filter/filterscreen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/dummy/service_detail.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/home_screen.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
+// import 'package:mr_urban_customer_app/AppScreens/Home/salon_at_home_for_woman_screen.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/Controller/AppControllerApi.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
@@ -675,7 +676,6 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
           .shrink(); // Return empty space if maid's city doesn't match
     }
 
-    // Existing buildGridItem implementation remains the same
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       child: InkWell(
@@ -684,158 +684,148 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
             FocusScope.of(context).requestFocus(FocusNode());
           });
         },
-        child: SizedBox(
-          width: 160,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: Card(
+          color: Colors.transparent,
+          child: Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  maid.maidImg,
-                  fit: BoxFit.cover,
-                  height: 80,
-                  width: 100,
-                ),
-              ),
-              SizedBox(width: 10),
-              Column(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: SizedBox(
+                        width: 120, // Increased width
+                        height: 100, // Increased height
+                        child: Image.asset(
+                          maid.maidImg,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(ImagePath.starImg, scale: 30),
-                          SizedBox(width: 4),
                           Text(
-                            maid.maidRating.minRating.toString(),
+                            maid.maidPrice.minPrice.toString(),
                             style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                fontSize: 14),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 1,
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          Text(
+                            maid.maidName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.asset(ImagePath.starImg, scale: 30),
+                              SizedBox(width: 4),
+                              Text(
+                                maid.maidRating.minRating.toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Wrap(
+                            spacing: 6,
+                            children: maid.serviceItems
+                                .map((item) => Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: CustomColors.accentColor,
+                                      ),
+                                      child: Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ))
+                                .take(2)
+                                .toList(),
                           ),
                         ],
                       ),
-
-                      // Sorting functionality
-                      Padding(
-                        padding: const EdgeInsets.only(left: 89.0),
-                        child: InkWell(
-                          onTap: () {
-                            addToCart(context, maid);
-                            Get.to(() => const BottomNavigationBarScreen());
-                          },
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.shopping_bag_outlined,
-                                size: 22,
-                                color: Colors.white,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Shortlist',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        maid.maidName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                ],
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      addToCart(context, maid);
+                      Get.to(() => const BottomNavigationBarScreen());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green, // Red background color
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 18,
                           color: Colors.white,
-                          fontFamily: CustomColors.fontFamily,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
                         ),
-                      ),
-                      // Displaying maid price
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            callNumber(maid.number);
-                          },
-                          child: Row(
-                            children: const [
-                              CircleAvatar(
-                                radius:
-                                    10, // Adjust the radius to your preference
-                                backgroundColor: Colors
-                                    .white, // Change the background color if needed
-                                child: Icon(
-                                  Icons.call,
-                                  color: Colors.black,
-                                  size: 14,
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Call Now',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    fontSize: 14),
-                              ),
-                            ],
+                        SizedBox(width: 5),
+                        Text(
+                          'Shortlist',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Displaying up to 2 service items
-                      Wrap(
-                        spacing: 6,
-                        children: maid.serviceItems
-                            .map((item) => Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 4, horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: CustomColors.accentColor,
-                                  ),
-                                  child: Text(
-                                    item.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ))
-                            .take(2) // Limiting to 2 service items
-                            .toList(),
-                      ),
-
-                      Text(
-                        maid.maidPrice.minPrice.toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 1,
-                          color: Colors.transparent,
+                  ElevatedButton(
+                    onPressed: () {
+                      callNumber(maid.number);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, // Red background color
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          Icons.call,
+                          size: 18,
+                          color: Colors.white,
                         ),
-                      ),
-                      // Call button
-                    ],
+                        SizedBox(width: 5),
+                        Text(
+                          'Call Maid',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -147,7 +147,7 @@ class _BookingScreenState extends State<BookingScreen> {
             itemCount: maidData.length,
             shrinkWrap: true,
             itemBuilder: (ctx, i) {
-              return buildGridItem(maidData[i], i);
+              return buildGridItem1(maidData[i], i);
             },
           ),
         ],
@@ -157,6 +157,171 @@ class _BookingScreenState extends State<BookingScreen> {
         child: emptyBooking(),
       );
     }
+  }
+
+  Widget buildGridItem1(Maid maid, int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: InkWell(
+        onTap: () {},
+        child: Card(
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: SizedBox(
+                        width: 120, // Increased width
+                        height: 100, // Increased height
+                        child: Image.asset(
+                          maid.maidImg,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            maid.maidPrice.minPrice.toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 1,
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          Text(
+                            maid.maidName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "₹${maid.maidPrice.minPrice.toString()}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.asset(ImagePath.starImg, scale: 30),
+                              const SizedBox(width: 4),
+                              Text(
+                                maid.maidRating.minRating.toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 6,
+                            children: maid.serviceItems
+                                .map((item) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: CustomColors.accentColor,
+                                      ),
+                                      child: Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ))
+                                .take(2)
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      removeFromCart(maid); // Call remove function here
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green, // Red background color
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.remove_circle,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Remove',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _callNumber(maid.number);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, // Red background color
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.call,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Call Maid',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildGridItem(Maid maid, int index) {
