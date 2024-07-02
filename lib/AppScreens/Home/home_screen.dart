@@ -69,7 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
     getUserLocation1();
     initPlatformState();
-
+    if (first == "Select City") {
+      // Show city selection popup only if first is "Select City"
+      showCitySelectionPopup();
+    }
     super.initState();
   }
 
@@ -195,10 +198,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // if (permission == LocationPermission.denied) {}
     // var currentLocation = await locateUser();
     // debugPrint('location: ${currentLocation.latitude}');
-    if (first == "Select City") {
-      // Show city selection popup only if first is "Select City"
-      showCitySelectionPopup();
-    }
 
     setState(() {
       uid = getData.read("UserLogin") != null
@@ -275,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Flexible(
                       fit: FlexFit.loose,
-                      child: Text("${first ?? ""}",
+                      child: Text("$first",
                           style: TextStyle(
                               fontFamily: CustomColors.fontFamily,
                               fontWeight: FontWeight.w700,

@@ -31,6 +31,7 @@ class ImagePath {
   static const bookingImg = "assets/images/booking_img.png";
   static const walletIcon = "assets/images/wallet_icon.png";
   static const userIcon = "assets/images/user_icon.png";
+  static const googleIcon = "assets/google.png";
 
   /// Icons
   static const listIcon = "assets/icons/list_icon.png";

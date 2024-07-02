@@ -2,12 +2,14 @@
 
 class TextString {
   /// OnBoarding Screen
-  static const Beautyparlouratyourhome = "Beauty parlour at your home";
+  static const Beautyparlouratyourhome = "Find Nearby Maids";
   static const skip = "Skip";
   static const Plumberexpartnearbyyou = "Plumber & expert nearby you";
-  static const Professionalhomecleaning = "Professional home cleaning";
+  static const maidtext = "Maid Finding App";
   static const loremIpsumFont =
       "Lorem ipsum is a placeholder text commonly used to demonstrate the visual.";
+
+  static const maidonboard = 'Find Nearby Maids';
   static const getStarted = "Get Started";
 
   /// Login Screen

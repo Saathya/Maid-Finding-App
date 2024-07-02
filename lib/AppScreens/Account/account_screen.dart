@@ -94,11 +94,14 @@ class _AccountScreenState extends State<AccountScreen> {
     isLoading = true;
     setState(() {});
 
-    nameController.text = getData.read("UserLogin")["name"] ?? "";
-    passwordController.text = getData.read("UserLogin")["password"] ?? "";
-    Email.text = getData.read("UserLogin")["email"] ?? "";
-    mobile.text = getData.read("UserLogin")["mobile"] ?? "";
-    networkimage = getData.read("UserLogin")["pro_pic"] ?? "";
+    nameController.text = user!.displayName ?? '';
+    mobile.text = user!.phoneNumber ?? '+917894561230';
+    Email.text = user!.email ?? '';
+    // nameController.text = getData.read("UserLogin")["name"] ?? "";
+    // passwordController.text = getData.read("UserLogin")["password"] ?? "";
+    // Email.text = getData.read("UserLogin")["email"] ?? "";
+    // mobile.text = getData.read("UserLogin")["mobile"] ?? "";
+    // networkimage = getData.read("UserLogin")["pro_pic"] ?? "";
 
     isLoading = false;
   }
@@ -115,8 +118,10 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
-    getData.read("UserLogin") != null ? getLoginData() : null;
+    // getData.read("UserLogin") != null ? getLoginData() : null;
     getWebData();
+
+    getLoginData();
     getPackage();
     super.initState();
   }
@@ -286,15 +291,16 @@ class _AccountScreenState extends State<AccountScreen> {
                         height: 35,
                         width: MediaQuery.of(context).size.width * 0.40,
                         decoration: BoxDecoration(
-                            border: Border.all(color: blueColor),
+                            border: Border.all(color: Colors.white),
                             borderRadius: BorderRadius.circular(10)),
-                        child: Center(
+                        child: const Center(
                             child: Text(
                           TextString.editProfile,
                           style: TextStyle(
                               fontSize: 15,
+                              fontWeight: FontWeight.w700,
                               fontFamily: "Gilroy Bold",
-                              color: blueColor),
+                              color: Colors.white),
                         )),
                       ),
                     )
@@ -321,17 +327,17 @@ class _AccountScreenState extends State<AccountScreen> {
         profilemenu(
             icon: Icons.keyboard_arrow_right_rounded,
             image: ImagePath.appointmentImg,
-            text: "My Booking",
+            text: "My Shortlist",
             onclick: () {
               Get.to(() => const BookingScreen(type: "hide"));
             }),
-        profilemenu(
-            icon: Icons.keyboard_arrow_right_rounded,
-            image: ImagePath.walletimg,
-            text: "Wallet",
-            onclick: () {
-              Get.to(() => const WalletReportPage(type: "hide"));
-            }),
+        // profilemenu(
+        //     icon: Icons.keyboard_arrow_right_rounded,
+        //     image: ImagePath.walletimg,
+        //     text: "Wallet",
+        //     onclick: () {
+        //       Get.to(() => const WalletReportPage(type: "hide"));
+        //     }),
         profilemenu(
             icon: Icons.keyboard_arrow_right_rounded,
             image: ImagePath.shareImg,
@@ -641,8 +647,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     const SizedBox(height: 24),
                     nameTextField(),
                     const SizedBox(height: 16),
-                    passwordTextFormField(),
-                    const SizedBox(height: 16),
+                    // passwordTextFormField(),
+                    // const SizedBox(height: 16),
                     email(),
                     const SizedBox(height: 16),
                     number(),
@@ -651,7 +657,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           cancelEditButton(),
-                          saveButton(),
+                          saveButton(context),
                         ])
                   ]),
                 ),
@@ -680,6 +686,7 @@ class _AccountScreenState extends State<AccountScreen> {
           return null;
         },
         fieldController: nameController,
+        style: const TextStyle(color: Colors.white),
         hintStyle: TextStyle(
             fontFamily: CustomColors.fontFamily, color: notifire.greyfont));
   }
@@ -687,7 +694,6 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget email() {
     return CustomTextfield(
       hint: TextString.email,
-      readOnly: true,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your Email';
@@ -695,6 +701,7 @@ class _AccountScreenState extends State<AccountScreen> {
         return null;
       },
       fieldController: Email,
+      style: const TextStyle(color: Colors.white),
       hintStyle: TextStyle(
           fontFamily: CustomColors.fontFamily, color: notifire.greyfont),
     );
@@ -703,7 +710,6 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget number() {
     return CustomTextfield(
         hint: TextString.number,
-        readOnly: true,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter your number';
@@ -711,6 +717,7 @@ class _AccountScreenState extends State<AccountScreen> {
           return null;
         },
         fieldController: mobile,
+        style: const TextStyle(color: Colors.white),
         hintStyle: TextStyle(
             fontFamily: CustomColors.fontFamily, color: notifire.greyfont));
   }
@@ -754,7 +761,7 @@ class _AccountScreenState extends State<AccountScreen> {
       height: 63.0,
       width: double.infinity,
       child: Text(
-        loginModel?.userLogin?.mobile ?? "",
+        loginModel?.userLogin?.mobile ?? '+915457894561',
         style: const TextStyle(
             fontFamily: CustomColors.fontFamily,
             fontWeight: FontWeight.w600,
@@ -774,7 +781,7 @@ class _AccountScreenState extends State<AccountScreen> {
           border: Border.all(color: Colors.grey)),
       height: 63.0,
       width: double.infinity,
-      child: Text(loginModel?.userLogin?.email ?? "",
+      child: Text(loginModel?.userLogin?.email ?? Email.text,
           style: const TextStyle(
               fontFamily: CustomColors.fontFamily,
               fontWeight: FontWeight.w600,
@@ -782,34 +789,105 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  /// Save button
-  Widget saveButton() {
+  Widget saveButton(BuildContext context) {
     return InkWell(
-      onTap: saveProfile,
-      child: Container(
-          width: 166,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: CustomColors.primaryColor),
-          child: const Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(TextString.save,
-                  style: TextStyle(
-                      color: CustomColors.white,
-                      fontSize: 15,
+      onTap: () {
+        // Show a Dialog message
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                'Save Profile',
+                style: TextStyle(
+                  color: CustomColors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: CustomColors.fontFamily,
+                ),
+              ),
+              content: const Text(
+                'Right now data is not saving because it\'s fetched from Google.',
+                style: TextStyle(
+                  color: CustomColors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: CustomColors.fontFamily,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: CustomColors.red,
+                      fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      fontFamily: CustomColors.fontFamily)),
+                      fontFamily: CustomColors.fontFamily,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Get.back();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 166,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: CustomColors.primaryColor,
+        ),
+        child: const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              TextString.save,
+              style: TextStyle(
+                color: CustomColors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                fontFamily: CustomColors.fontFamily,
+              ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
+  // /// Save button
+  // Widget saveButton() {
+  //   return InkWell(
+  //     onTap: saveProfile,
+  //     child: Container(
+  //         width: 166,
+  //         decoration: BoxDecoration(
+  //             borderRadius: BorderRadius.circular(30),
+  //             color: CustomColors.primaryColor),
+  //         child: const Center(
+  //           child: Padding(
+  //             padding: EdgeInsets.symmetric(vertical: 10),
+  //             child: Text(TextString.save,
+  //                 style: TextStyle(
+  //                     color: CustomColors.white,
+  //                     fontSize: 15,
+  //                     fontWeight: FontWeight.w700,
+  //                     fontFamily: CustomColors.fontFamily)),
+  //           ),
+  //         )),
+  //   );
+  // }
+
   saveProfile() {
     var body = {
-      "name": nameController.text.toString(),
-      "password": passwordController.text.toString(),
-      "uid": uid,
+      // "name": nameController.text.toString(),
+      // "password": passwordController.text.toString(),
+      // "uid": uid,
     };
 
     ApiWrapper.dataPost(Config.profileEdit, body).then((val) {

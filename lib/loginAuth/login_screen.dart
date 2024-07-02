@@ -15,6 +15,7 @@ import 'package:mr_urban_customer_app/model/login_model.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';
+import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
 import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -106,16 +107,16 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: notifire.getprimerycolor,
         appBar: AppBar(
-            leading: IconButton(
-                icon: Icon(Icons.arrow_back,
-                    color: notifire.getdarkscolor, size: 28),
-                onPressed: () {
-                  if (widget.type == "payment") {
-                    Get.back();
-                  } else {
-                    Get.off(() => const BottomNavigationBarScreen());
-                  }
-                }),
+            // leading: IconButton(
+            //     icon: Icon(Icons.arrow_back,
+            //         color: notifire.getdarkscolor, size: 28),
+            //     onPressed: () {
+            //       if (widget.type == "payment") {
+            //         Get.back();
+            //       } else {
+            //         Get.off(() => const BottomNavigationBarScreen());
+            //       }
+            //     }),
             backgroundColor: notifire.getprimerycolor,
             elevation: 0,
             title: Text(
@@ -310,29 +311,41 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget continueasGoogle() {
-    return Center(
-      child: InkWell(
-        onTap: _handleSignIn,
-        child: Container(
-          height: 48,
-          width: Get.width * 0.60,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: notifire.greyfont, width: 1, style: BorderStyle.solid),
-              color: Colors.white),
-          child: const Center(
-            child: Text(TextString.google,
-                style: TextStyle(
-                    fontFamily: CustomColors.fontFamily,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black)),
-          ),
+ Widget continueasGoogle() {
+  return Center(
+    child: InkWell(
+      onTap: _handleSignIn,
+      child: Container(
+        height: 48,
+        width: Get.width * 0.60,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: notifire.greyfont, width: 1, style: BorderStyle.solid),
+            color: Colors.white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+             ImagePath.googleIcon, // Path to the Google logo image
+              height: 24, // Adjust the height as needed
+            ),
+            const SizedBox(width: 10), // Space between the logo and the text
+            const Text(
+              TextString.google,
+              style: TextStyle(
+                fontFamily: CustomColors.fontFamily,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Future<User?> signInWithGoogle() async {
     // Trigger the authentication flow

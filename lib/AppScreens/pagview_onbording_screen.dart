@@ -9,7 +9,6 @@ import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PagviewOnordingScreen extends StatefulWidget {
   const PagviewOnordingScreen({Key? key}) : super(key: key);
 
@@ -31,20 +30,20 @@ class _PagviewOnordingScreenState extends State<PagviewOnordingScreen> {
   }
 
   final List<OnBoardModel> onBoardData = [
+    // const OnBoardModel(
+    //   title: TextString.Beautyparlouratyourhome,
+    //   description: TextString.loremIpsumFont,
+    //   imgUrl: ImagePath.onboarding_1_img,
+    // ),
+    // const OnBoardModel(
+    //   title: TextString.Plumberexpartnearbyyou,
+    //   description: TextString.loremIpsumFont,
+    //   imgUrl: ImagePath.onboarding_2_img,
+    // ),
     const OnBoardModel(
-      title: TextString.Beautyparlouratyourhome,
-      description: TextString.loremIpsumFont,
+      title: TextString.maidtext,
+      description: TextString.maidonboard,
       imgUrl: ImagePath.onboarding_1_img,
-    ),
-    const OnBoardModel(
-      title: TextString.Plumberexpartnearbyyou,
-      description: TextString.loremIpsumFont,
-      imgUrl: ImagePath.onboarding_2_img,
-    ),
-    const OnBoardModel(
-      title: TextString.Professionalhomecleaning,
-      description: TextString.loremIpsumFont,
-      imgUrl: ImagePath.onboarding_3_img,
     ),
   ];
   @override
@@ -75,65 +74,64 @@ class _PagviewOnordingScreenState extends State<PagviewOnordingScreen> {
           skipButton:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Image.asset(ImagePath.curvePinkImg, scale: 2),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Container(
-                height: 40,
-                width: 80,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: CustomColors.accentColor),
-                child: TextButton(
-                  onPressed: () {
-                    Get.to(() => const LoginScreen());
-                  },
-                  child: const Text(
-                    "Skip",
-                    style: TextStyle(
-                        color: CustomColors.black,
-                        fontFamily: CustomColors.fontFamily),
-                  ),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            //   child: Container(
+            //     height: 40,
+            //     width: 80,
+            //     decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.circular(30),
+            //         color: CustomColors.accentColor),
+            //     child: TextButton(
+            //       onPressed: () {
+            //         Get.to(() => const LoginScreen());
+            //       },
+            //       child: const Text(
+            //         "Skip",
+            //         style: TextStyle(
+            //             color: CustomColors.black,
+            //             fontFamily: CustomColors.fontFamily),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ]),
           nextButton: OnBoardConsumer(
             builder: (context, ref, child) {
               final state = ref.watch(onBoardStateProvider);
               return InkWell(
-                onTap: () => _onNextTap(state),
-                child: state.isLastPage
-                    ? InkWell(
-                        onTap: () {
-                          Get.to(() => const LoginScreen());
-                        },
-                        child: Container(
-                            height: 48,
-                            width: 166,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: CustomColors.primaryColor),
-                            child: const Center(
-                                child: Text(
-                              TextString.getStarted,
-                              style: TextStyle(
-                                  color: CustomColors.white,
-                                  fontFamily: CustomColors.fontFamily,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700),
-                            ))),
-                      )
-                    : CircleAvatar(
-                        radius: 28,
-                        backgroundColor: CustomColors.primaryColor,
-                        child: state.isLastPage
-                            ? const SizedBox.shrink()
-                            : const Icon(
-                                Icons.arrow_forward_ios,
-                                color: CustomColors.white,
-                              ),
-                      ),
-              );
+                  onTap: () => _onNextTap(state),
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(() => const LoginScreen());
+                    },
+                    child: Container(
+                        height: 48,
+                        width: 166,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: CustomColors.primaryColor),
+                        child: const Center(
+                            child: Text(
+                          TextString.getStarted,
+                          style: TextStyle(
+                              color: CustomColors.white,
+                              fontFamily: CustomColors.fontFamily,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700),
+                        ))),
+                  )
+                  // : CircleAvatar(
+                  //     radius: 28,
+                  //     backgroundColor: CustomColors.primaryColor,
+                  //     child: state.isLastPage
+                  //         ? const SizedBox.shrink()
+                  //         : const Icon(
+                  //             Icons.arrow_forward_ios,
+                  //             color: CustomColors.white,
+                  //           ),
+                  //   ),
+                  );
             },
           ),
         ));

@@ -18,17 +18,13 @@ import 'package:mr_urban_customer_app/model/image_upload_model.dart';
 import 'package:mr_urban_customer_app/model/login_model.dart';
 import 'package:mr_urban_customer_app/model/register_model.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
-
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-
 import '../AppScreens/Home/home_screen.dart';
 
 class ApiService {
   Dio dio = Dio();
-
-  // String? uid;
 
   /// Get Login Data
   getLoginData() async {
