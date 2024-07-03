@@ -32,9 +32,10 @@ Color serchbaarl = Colors.white;
 Color b = const Color(0xff2D2D3A);
 Color l = Colors.black;
 
-Color a = Colors.white.withOpacity(0.2);
+Color a = const Color.fromARGB(255, 0, 0, 0).withOpacity(0.2);
 Color j = Colors.white.withOpacity(0.5);
-Color d = const Color(0xffE7E7E7);
+Color d = const Color.fromARGB(255, 225, 225, 225).withOpacity(0.2);
+
 //========================================
 
 Color splayl = Colors.blue;

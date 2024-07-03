@@ -120,10 +120,29 @@ class _AccountScreenState extends State<AccountScreen> {
   void initState() {
     // getData.read("UserLogin") != null ? getLoginData() : null;
     getWebData();
-
+    initPreferences();
     getLoginData();
     getPackage();
     super.initState();
+  }
+
+  late SharedPreferences prefs;
+
+  Future<void> initPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      // Retrieve isdark state from SharedPreferences, defaulting to false (light mode)
+      isdark = prefs.getBool('isdark') ?? false;
+    });
+  }
+
+  void toggleDarkMode(bool val) {
+    setState(() {
+      isdark = val;
+      notifire.setIsDark = val;
+
+      prefs.setBool('isdark', val); // Save isdark state to SharedPreferences
+    });
   }
 
   void getPackage() async {
@@ -291,16 +310,16 @@ class _AccountScreenState extends State<AccountScreen> {
                         height: 35,
                         width: MediaQuery.of(context).size.width * 0.40,
                         decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
+                            border: Border.all(color: notifire.getdarkscolor),
                             borderRadius: BorderRadius.circular(10)),
-                        child: const Center(
+                        child: Center(
                             child: Text(
                           TextString.editProfile,
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                               fontFamily: "Gilroy Bold",
-                              color: Colors.white),
+                              color: notifire.getdarkscolor),
                         )),
                       ),
                     )
@@ -378,21 +397,19 @@ class _AccountScreenState extends State<AccountScreen> {
           },
         ),
         profilemenu(
-            image: ImagePath.darkshow,
-            text: "Dark Mode",
-            darkmode: Transform.scale(
-                scale: 0.7,
-                child: CupertinoSwitch(
-                  activeColor: CustomColors.primaryColor,
-                  value: isdark,
-                  onChanged: (val) async {
-                    setState(() {
-                      isdark = val;
-                      // notifire.setIsDark = val;
-                    });
-                  },
-                )),
-            onclick: () {}),
+          image: ImagePath.darkshow,
+          text: "Dark Mode",
+          darkmode: Transform.scale(
+            scale: 0.7,
+            child: CupertinoSwitch(
+              activeColor: CustomColors.primaryColor,
+              value: isdark,
+              onChanged: toggleDarkMode,
+            ),
+          ),
+          onclick: () {},
+        ),
+
         profilemenu(
             icon: Icons.keyboard_arrow_right_rounded,
             image: ImagePath.delete,
@@ -686,7 +703,9 @@ class _AccountScreenState extends State<AccountScreen> {
           return null;
         },
         fieldController: nameController,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: notifire.getdarkscolor,
+        ),
         hintStyle: TextStyle(
             fontFamily: CustomColors.fontFamily, color: notifire.greyfont));
   }
@@ -701,7 +720,9 @@ class _AccountScreenState extends State<AccountScreen> {
         return null;
       },
       fieldController: Email,
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(
+        color: notifire.getdarkscolor,
+      ),
       hintStyle: TextStyle(
           fontFamily: CustomColors.fontFamily, color: notifire.greyfont),
     );
@@ -717,7 +738,9 @@ class _AccountScreenState extends State<AccountScreen> {
           return null;
         },
         fieldController: mobile,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: notifire.getdarkscolor,
+        ),
         hintStyle: TextStyle(
             fontFamily: CustomColors.fontFamily, color: notifire.greyfont));
   }

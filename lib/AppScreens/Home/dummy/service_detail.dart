@@ -2,10 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/route_manager.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/ViewAllSection.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
+import 'package:mr_urban_customer_app/loginAuth/change_password_screen.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
+import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Servicedetail extends StatefulWidget {
   final Maid maid;
@@ -60,21 +65,41 @@ class _ServicedetailState extends State<Servicedetail> {
     }
   }
 
+  etdarkmodepreviousstate() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? previusstate = prefs.getBool("setIsDark");
+    if (previusstate == null) {
+      notifire.setIsDark = false;
+    } else {
+      notifire.setIsDark = previusstate;
+    }
+  }
+
+  late ColorNotifire notifire;
+
   @override
   Widget build(BuildContext context) {
+    notifire = Provider.of<ColorNotifire>(context, listen: true);
+
     double discountedPrice =
         widget.maid.maidPrice.minPrice * 0.8; // Applying 20% discount
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: notifire.getprimerycolor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: notifire.getprimerycolor,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        iconTheme: IconThemeData(
+          color: notifire
+              .getdarkscolor, // Set icon color dynamically based on dark mode
+        ),
+        title: Text(
           "Book Your Service",
           style: TextStyle(
-              fontSize: 25, fontWeight: FontWeight.w600, color: Colors.black),
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              color: notifire.getdarkscolor),
         ),
       ),
       body: SingleChildScrollView(
@@ -103,9 +128,10 @@ class _ServicedetailState extends State<Servicedetail> {
                 children: [
                   Text(
                     widget.maid.maidName,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color:notifire.getdarkscolor
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -127,11 +153,12 @@ class _ServicedetailState extends State<Servicedetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                       Text(
                         'Service Price',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: notifire.getdarkscolor
                         ),
                       ),
                       Text(
@@ -227,7 +254,7 @@ class _ServicedetailState extends State<Servicedetail> {
         return GridTile(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: notifire.getdarkscolors,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -251,7 +278,7 @@ class _ServicedetailState extends State<Servicedetail> {
                 Text(
                   services[index].name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 14),
+                  style:  TextStyle(fontSize: 14,color: notifire.getdarkscolor,)
                 ),
               ],
             ),

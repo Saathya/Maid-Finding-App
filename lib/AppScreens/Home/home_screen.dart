@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String? packageName;
   bool isChecked = false;
   String code = "0";
-
   int _currentIndex = 0;
 
   @override
@@ -69,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
     getUserLocation1();
     initPlatformState();
-    if (first == "Select City") {
-      // Show city selection popup only if first is "Select City"
-      showCitySelectionPopup();
-    }
+    // if (first == "Select City") {
+    //   // Show city selection popup only if first is "Select City"
+    //   showCitySelectionPopup();
+    // }
     super.initState();
   }
 
@@ -114,6 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void saveSelectedCity(String selectedCity) {
     prefs.setString('selectedCity', selectedCity);
+    first = selectedCity; // Update selected city
   }
 
   late ColorNotifire notifire;
@@ -147,47 +147,47 @@ class _HomeScreenState extends State<HomeScreen> {
   //   });
   // }
 
-  void showCitySelectionPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select City'),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: DropdownButton<String>(
-              isExpanded: true,
-              underline: Container(
-                height: 1,
-                color: Colors.grey.shade400,
-              ),
-              icon: const Icon(Icons.arrow_drop_down),
-              iconSize: 36,
-              elevation: 8,
-              style: const TextStyle(fontSize: 16, color: Colors.black),
-              value: first, // Initially selected city
-              onChanged: (String? selectedCity) {
-                setState(() {
-                  first = selectedCity!; // Update selected city
-                });
-                saveSelectedCity(first); // Save the current selected city
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              items:
-                  dummyCityNames.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void showCitySelectionPopup() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text('Select City'),
+  //         contentPadding:
+  //             const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //         content: SizedBox(
+  //           width: double.maxFinite,
+  //           child: DropdownButton<String>(
+  //             isExpanded: true,
+  //             underline: Container(
+  //               height: 1,
+  //               color: Colors.grey.shade400,
+  //             ),
+  //             icon: const Icon(Icons.arrow_drop_down),
+  //             iconSize: 36,
+  //             elevation: 8,
+  //             style: const TextStyle(fontSize: 16, color: Colors.black),
+  //             value: first, // Initially selected city
+  //             onChanged: (String? selectedCity) {
+  //               setState(() {
+  //                 first = selectedCity!; // Update selected city
+  //               });
+  //               saveSelectedCity(first); // Save the current selected city
+  //               Navigator.of(context).pop(); // Close the dialog
+  //             },
+  //             items:
+  //                 dummyCityNames.map<DropdownMenuItem<String>>((String value) {
+  //               return DropdownMenuItem<String>(
+  //                 value: value,
+  //                 child: Text(value),
+  //               );
+  //             }).toList(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future getUserLocation1() async {
     isLoding = true;
@@ -256,33 +256,63 @@ class _HomeScreenState extends State<HomeScreen> {
               // });
 
               // Show city selection popup only if first is "Select City"
-              showCitySelectionPopup();
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "CURRENT CITY",
+                  "Current City",
                   style: TextStyle(
-                      fontFamily: CustomColors.fontFamily,
-                      fontSize: 13,
-                      color: notifire.getdarkscolor),
+                    fontFamily: CustomColors.fontFamily,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: notifire.getdarkscolor,
+                  ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Text("$first",
-                          style: TextStyle(
-                              fontFamily: CustomColors.fontFamily,
-                              fontWeight: FontWeight.w700,
-                              color: notifire.getdarkscolor,
-                              overflow: TextOverflow.ellipsis,
-                              fontSize: 14)),
+                    Expanded(
+                      child: DropdownButton<String>(
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: notifire.getdarkscolor,
+                        ),
+                        iconSize: 36,
+                        elevation: 8,
+                        dropdownColor: notifire.getdarkscolors,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: notifire.getdarkscolor,
+                        ),
+                        value: first, // Initially selected city
+                        underline: Container(), // Remove the underline
+                        onChanged: (String? city) {
+                          if (city != null) {
+                            saveSelectedCity(
+                                city); // Save the current selected city
+                          }
+                        },
+                        items: dummyCityNames
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: TextStyle(
+                                fontFamily: CustomColors.fontFamily,
+                                fontWeight: FontWeight.w700,
+                                color: notifire.getdarkscolor,
+                                // Selected item color
+                                fontSize: 14,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                    Icon(Icons.arrow_drop_down, color: notifire.getdarkscolor)
+                    // const SizedBox(width: 8),
+                    // Icon(Icons.arrow_drop_down, color: notifire.getdarkscolor),
                   ],
                 ),
               ],

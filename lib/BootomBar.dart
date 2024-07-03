@@ -12,7 +12,6 @@ import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'AppScreens/Booking/Booking.dart';
 // import 'AppScreens/Wallet/WalletHistory.dart';
 import 'utils/AppWidget.dart';
 
@@ -87,11 +86,11 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
                     : const SizedBox();
               }
             },
-            indicator: const UnderlineTabIndicator(
-              insets: EdgeInsets.only(bottom: 6),
-              borderSide: BorderSide(color: Colors.white, width: 2),
+            indicator: UnderlineTabIndicator(
+              insets: const EdgeInsets.only(bottom: 6),
+              borderSide: BorderSide(color: notifire.getdarkscolor, width: 2),
             ),
-            // labelColor: Colors.white,
+            // labelColor: notifire.getdarkscolor,
             // indicatorSize: TabBarIndicatorSize.label,
             unselectedLabelColor: notifire.greyfont,
             controller: tabController,
@@ -101,40 +100,43 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen>
                 Image.asset(
                   ImagePath.homeImg,
                   scale: 19,
-                  color: Colors.white,
+                  color: notifire.getdarkscolor,
                 ),
-                const Text('Home',
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                Text('Home',
+                    style:
+                        TextStyle(fontSize: 12, color: notifire.getdarkscolor)),
               ])),
               Tab(
                   child: Column(children: [
                 Image.asset(
                   ImagePath.bookingImg,
                   scale: 19,
-                  color: Colors.white,
+                  color: notifire.getdarkscolor,
                 ),
-                const Text('Shortlist',
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                Text('Shortlist',
+                    style:
+                        TextStyle(fontSize: 12, color: notifire.getdarkscolor)),
               ])),
               // Tab(
               //     child: Column(children: [
               //   Image.asset(
               //     ImagePath.walletIcon,
               //     scale: 19,
-              //     color: Colors.white,
+              //     color: notifire.getdarkscolor,
               //   ),
               //   const Text('Wallet',
-              //       style: TextStyle(fontSize: 12, color: Colors.white)),
+              //       style: TextStyle(fontSize: 12, color: notifire.getdarkscolor)),
               // ])),
               Tab(
                   child: Column(children: [
                 Image.asset(
                   ImagePath.userIcon,
                   scale: 19,
-                  color: Colors.white,
+                  color: notifire.getdarkscolor,
                 ),
-                const Text('Account',
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                Text('Account',
+                    style:
+                        TextStyle(fontSize: 12, color: notifire.getdarkscolor)),
               ])),
             ],
           ),

@@ -67,8 +67,10 @@ class _BookingScreenState extends State<BookingScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         '${maid.maidName} removed from booking',
-        style: const TextStyle(
-            fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
+        style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: notifire.getdarkscolors,
+            fontSize: 16),
       ),
     ));
   }
@@ -154,7 +156,31 @@ class _BookingScreenState extends State<BookingScreen> {
       );
     } else {
       return Center(
-        child: emptyBooking(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: Get.width * 0.02),
+              child: Image(
+                image: const AssetImage("assets/emptybooking.png"),
+                height: Get.height * 0.14,
+              ),
+            ),
+            SizedBox(height: Get.height * 0.02),
+            Center(
+              child: Text(
+                "Go & Book your favorite service.",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: notifire.getdarkscolor, // Use getdarkscolor property
+                  fontSize: 16,
+                  fontFamily: 'Gilroy Bold',
+                ),
+              ),
+            ),
+            SizedBox(height: Get.height * 0.02),
+          ],
+        ),
       );
     }
   }
@@ -165,7 +191,7 @@ class _BookingScreenState extends State<BookingScreen> {
       child: InkWell(
         onTap: () {},
         child: Card(
-          color: Colors.transparent,
+          color: notifire.getdarkscolors,
           child: Column(
             children: [
               Row(
@@ -201,19 +227,19 @@ class _BookingScreenState extends State<BookingScreen> {
                           ),
                           Text(
                             maid.maidName,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15,
-                              color: Colors.white,
+                              color: notifire.getdarkscolor,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             "₹${maid.maidPrice.minPrice.toString()}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15,
-                              color: Colors.white,
+                              color: notifire.getdarkscolor,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -224,9 +250,9 @@ class _BookingScreenState extends State<BookingScreen> {
                               const SizedBox(width: 4),
                               Text(
                                 maid.maidRating.minRating.toString(),
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.white,
+                                    color: notifire.getdarkscolor,
                                     fontSize: 14),
                               ),
                             ],
@@ -358,9 +384,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                 4), // Adjust spacing between star and rating text
                         Text(
                           maid.maidRating.minRating.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                              color: notifire.getdarkscolor,
                               fontSize: 14),
                         ),
                       ],
@@ -378,8 +404,8 @@ class _BookingScreenState extends State<BookingScreen> {
                           child: Text(
                             '₹${maid.maidPrice.minPrice.toString()}',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Colors.white,
+                            style: TextStyle(
+                                color: notifire.getdarkscolor,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 fontFamily: CustomColors.fontFamily),
@@ -396,8 +422,8 @@ class _BookingScreenState extends State<BookingScreen> {
                       maid.maidName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: notifire.getdarkscolor,
                         fontFamily: CustomColors.fontFamily,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
@@ -409,9 +435,9 @@ class _BookingScreenState extends State<BookingScreen> {
                         onTap: () {
                           _callNumber(maid.number);
                         },
-                        child: const Row(
+                        child: Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius:
                                   12, // Adjust the radius to your preference
                               backgroundColor: Colors
@@ -422,12 +448,12 @@ class _BookingScreenState extends State<BookingScreen> {
                                 size: 16,
                               ),
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
                               'Call Now',
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: notifire.getdarkscolor,
                                   fontSize: 14),
                             ),
                           ],
@@ -477,8 +503,8 @@ class _BookingScreenState extends State<BookingScreen> {
                         child: Text(
                           maid.paymentStatus,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: notifire.getdarkscolor,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: CustomColors.fontFamily,
@@ -499,12 +525,12 @@ class _BookingScreenState extends State<BookingScreen> {
                           color: CustomColors.red,
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             'Remove',
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: notifire.getdarkscolor,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               fontFamily: CustomColors.fontFamily,
@@ -593,8 +619,8 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: Text(
                         users["status"],
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: Colors.white,
+                        style: TextStyle(
+                            color: notifire.getdarkscolor,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             fontFamily: CustomColors.fontFamily),

@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/ViewAllSection.dart';
+import 'package:mr_urban_customer_app/model/servicemodel.dart';
+import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'color_widget.dart';
 
@@ -283,26 +286,7 @@ addButton({Function()? onTap}) {
   );
 }
 
-emptyBooking() {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Padding(
-          padding: EdgeInsets.only(left: Get.width * 0.02),
-          child: Image(
-              image: const AssetImage("assets/emptybooking.png"),
-              height: Get.height * 0.14)),
-      SizedBox(height: Get.height * 0.02),
-      const Center(
-        child: Text("Go & Book your favorite service.",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                color: Colors.white, fontSize: 16, fontFamily: 'Gilroy Bold')),
-      ),
-      SizedBox(height: Get.height * 0.02),
-    ],
-  );
-}
+ 
 
 // Phone Call
 Future<void> makePhoneCall(String url) async {

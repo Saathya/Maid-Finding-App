@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mr_urban_customer_app/AppScreens/Home/ViewAllSection.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/search_catogory_screen.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utils/colors.dart';
 
 class Filterscreen extends StatefulWidget {
   const Filterscreen({Key? key}) : super(key: key);
@@ -237,21 +242,38 @@ class _FilterscreenState extends State<Filterscreen> {
     );
   }
 
+  etdarkmodepreviousstate() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? previusstate = prefs.getBool("setIsDark");
+    if (previusstate == null) {
+      notifire.setIsDark = false;
+    } else {
+      notifire.setIsDark = previusstate;
+    }
+  }
+
+  late ColorNotifire notifire;
+
   @override
   Widget build(BuildContext context) {
+    notifire = Provider.of<ColorNotifire>(context, listen: true);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: notifire.getprimerycolor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text(
+        backgroundColor: notifire.getprimerycolor,
+        title: Text(
           "Filter",
           style: TextStyle(
-            color: Colors.white,
+            color: notifire.getdarkscolor,
             fontWeight: FontWeight.w600,
             fontSize: 25,
           ),
         ),
-        iconTheme: Theme.of(context).primaryIconTheme,
+        iconTheme: IconThemeData(
+          color: notifire
+              .getdarkscolor, // Set icon color dynamically based on dark mode
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -305,7 +327,7 @@ class _FilterscreenState extends State<Filterscreen> {
     return Text(
       title,
       style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-            color: Colors.black,
+            color: notifire.getdarkscolor,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),

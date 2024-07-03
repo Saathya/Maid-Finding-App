@@ -55,20 +55,21 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
   final subWise = UserServiceData();
 
   final search = TextEditingController();
+  String searchText = '';
 
   @override
   void initState() {
     setState(() {});
-    widget.type == "Search" ? vendorSearchApi("a") : null;
+    // widget.type == "Search" ? vendorSearchApi("a") : null;
 
-    insertData();
-    isLoading = true;
+    // insertData();
+    // isLoading = true;
 
-    x.categoryWiseProviderApi(widget.catId).then((val) {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    // x.categoryWiseProviderApi(widget.catId).then((val) {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
     super.initState();
   }
 
@@ -93,9 +94,9 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           '${maid.maidName} is already booked',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: Colors.white,
+            color: notifire.getdarkscolors,
             fontSize: 16,
           ),
         ),
@@ -105,9 +106,9 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           '${maid.maidName} is booked',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: Colors.white,
+            color: notifire.getdarkscolors,
             fontSize: 16,
           ),
         ),
@@ -160,7 +161,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
     notifire = Provider.of<ColorNotifire>(context, listen: true);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: notifire.detail,
+      backgroundColor: notifire.getprimerycolor,
       body: isLoading == false
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,16 +186,21 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                             style: TextStyle(color: notifire.getdarkscolor),
                             onChanged: (val) {
                               if (val.length != 0) {
-                                vendorSearchApi(val);
-                              } else {
-                                x
-                                    .categoryWiseProviderApi(widget.catId)
-                                    .then((val) {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
+                                setState(() {
+                                  searchText = val;
                                 });
                               }
+                              // if (val.length != 0) {
+                              //   vendorSearchApi(val);
+                              // } else {
+                              //   x
+                              //       .categoryWiseProviderApi(widget.catId)
+                              //       .then((val) {
+                              //     setState(() {
+                              //       isLoading = false;
+                              //     });
+                              //   });
+                              // }
                             },
                             cursorColor: notifire.getdarkscolor,
                             decoration: InputDecoration(
@@ -227,7 +233,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                     color: CustomColors.grey.shade300),
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              hintText: 'Search Category',
+                              hintText: 'Search Maids',
                             ),
                           ),
                         ),
@@ -250,13 +256,13 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                           },
                           icon: Icon(
                             Icons.filter_list_rounded,
-                            color: Colors.white,
+                            color: notifire.getdarkscolor,
                             size: 28,
                           ),
                           label: Text(
                             'Filter',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: notifire.getdarkscolor,
                               fontSize: 14,
                             ),
                           ),
@@ -322,7 +328,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10),
-                                                    color: CustomColors.white,
+                                                    color:
+                                                        notifire.getdarkscolor,
                                                     boxShadow: [
                                                       BoxShadow(
                                                           color: Colors.grey
@@ -357,7 +364,8 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                                                       .symmetric(
                                                       horizontal: 14),
                                                   decoration: BoxDecoration(
-                                                      color: CustomColors.white,
+                                                      color: notifire
+                                                          .getdarkscolor,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               10),
@@ -410,8 +418,22 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                               } else {
                                 maid = widget.filteredMaidList![index];
                               }
+
+                              // Check if maid name matches search text
+                              bool matchesSearch = maid.maidName
+                                  .toLowerCase()
+                                  .contains(searchText.toLowerCase());
+
+                              // Render your maid item if it matches search text
+                              if (!matchesSearch) {
+                                return SizedBox
+                                    .shrink(); // Skip rendering this maid
+                              }
+
+                              // Render your maid item here
                               return buildGridItem(maid, index);
                             },
+                            // If no items match the search, show a message
                           )
 
                     // : Padding(
@@ -430,7 +452,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
                     //               "Currently, Service not listed on this Category",
                     //               textAlign: TextAlign.center,
                     //               style: TextStyle(
-                    //                   color: CustomColors.white,
+                    //                   color: Customnotifire.getdarkscolor,
                     //                   fontWeight: FontWeight.bold,
                     //                   fontFamily: CustomColors.fontFamily,
                     //                   fontSize: 18)),
@@ -498,7 +520,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
         //               "Currently, Service not listed on this Category",
         //               textAlign: TextAlign.center,
         //               style: TextStyle(
-        //                   color: CustomColors.white,
+        //                   color: Customnotifire.getdarkscolor,
         //                   fontWeight: FontWeight.bold,
         //                   fontFamily: CustomColors.fontFamily,
         //                   fontSize: 18)),
@@ -671,169 +693,171 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
     }
 
     // Filter maids based on selected city
-    if (first != "Select City" && maid.maidLocation.location != first) {
+    if (maid.maidLocation.location != first) {
       return SizedBox
-          .shrink(); // Return empty space if maid's city doesn't match
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      child: InkWell(
-        onTap: () {
-          Get.to(() => Servicedetail(maid: maid))!.then((value) {
-            FocusScope.of(context).requestFocus(FocusNode());
-          });
-        },
-        child: Card(
-          color: Colors.transparent,
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: SizedBox(
-                        width: 120, // Increased width
-                        height: 100, // Increased height
-                        child: Image.asset(
-                          maid.maidImg,
-                          fit: BoxFit.cover,
+          .shrink(); // Return empty space if maid's city doesn't match selected city
+    } else {
+      // Render your data here when maid's city matches selected city
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: InkWell(
+          onTap: () {
+            Get.to(() => Servicedetail(maid: maid))!.then((value) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            });
+          },
+          child: Card(
+            color: notifire.getdarkscolors,
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: SizedBox(
+                          width: 120, // Increased width
+                          height: 100, // Increased height
+                          child: Image.asset(
+                            maid.maidImg,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            maid.maidPrice.minPrice.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 1,
-                              color: Colors.transparent,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              maid.maidPrice.minPrice.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 1,
+                                color: Colors.transparent,
+                              ),
                             ),
+                            Text(
+                              maid.maidName,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: notifire.getdarkscolor,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(ImagePath.starImg, scale: 30),
+                                SizedBox(width: 4),
+                                Text(
+                                  maid.maidRating.minRating.toString(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: notifire.getdarkscolor,
+                                      fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Wrap(
+                              spacing: 6,
+                              children: maid.serviceItems
+                                  .map((item) => Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: CustomColors.accentColor,
+                                        ),
+                                        child: Text(
+                                          item.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ))
+                                  .take(2)
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        addToCart(context, maid);
+                        Get.to(() => const BottomNavigationBarScreen());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green, // Red background color
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 18,
+                            color: Colors.white,
                           ),
+                          SizedBox(width: 5),
                           Text(
-                            maid.maidName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
+                            'Shortlist',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
                               color: Colors.white,
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(ImagePath.starImg, scale: 30),
-                              SizedBox(width: 4),
-                              Text(
-                                maid.maidRating.minRating.toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    fontSize: 14),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Wrap(
-                            spacing: 6,
-                            children: maid.serviceItems
-                                .map((item) => Container(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: CustomColors.accentColor,
-                                      ),
-                                      child: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ))
-                                .take(2)
-                                .toList(),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-              ButtonBar(
-                alignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      addToCart(context, maid);
-                      Get.to(() => const BottomNavigationBarScreen());
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Red background color
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.shopping_bag_outlined,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Shortlist',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
+                    ElevatedButton(
+                      onPressed: () {
+                        callNumber(maid.number);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red, // Red background color
+                      ),
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.call,
+                            size: 18,
                             color: Colors.white,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      callNumber(maid.number);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red, // Red background color
-                    ),
-                    child: Row(
-                      children: const [
-                        Icon(
-                          Icons.call,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          'Call Maid',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: Colors.white,
+                          SizedBox(width: 5),
+                          Text(
+                            'Call Maid',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      ); // Replace with your actual widget or data rendering logic
+    }
   }
 
   userList(index) {
