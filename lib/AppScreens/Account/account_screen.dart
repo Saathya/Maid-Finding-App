@@ -52,6 +52,7 @@ class _AccountScreenState extends State<AccountScreen> {
   LoginModel? loginModel;
   String? emailId;
   String? name;
+  String? cCode;
   String? mobiles;
   String? pImage;
   String? base64Image;
@@ -63,7 +64,6 @@ class _AccountScreenState extends State<AccountScreen> {
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  final String TestEmail = 'dinspir821@gmail.com';
   String? networkimage;
   final Email = TextEditingController();
   final mobile = TextEditingController();
@@ -76,7 +76,7 @@ class _AccountScreenState extends State<AccountScreen> {
   RegisterModel? registerModel;
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmePassword = TextEditingController();
+  final ccodeController = TextEditingController();
 
   ApiService service = ApiService();
 
@@ -98,10 +98,15 @@ class _AccountScreenState extends State<AccountScreen> {
   getLoginData() async {
     isLoading = true;
     setState(() {});
-    nameController.text = name ?? user!.displayName ?? '';
-    passwordController.text = (mobiles ?? user!.phoneNumber)!;
-    Email.text = (emailId ?? user!.email)!;
+    nameController.text = name ?? '';
+    passwordController.text = mobiles ?? '9999999999';
+    Email.text = emailId ?? '';
+    ccodeController.text = cCode ?? '';
 
+    print(nameController.text);
+    print(Email.text);
+    print(ccodeController.text);
+    print(passwordController.text);
     isLoading = false;
   }
 
@@ -131,6 +136,7 @@ class _AccountScreenState extends State<AccountScreen> {
         name = userData['name'];
         emailId = userData['email'];
         mobiles = userData['mobile'];
+        cCode = userData['ccode'];
         networkimage = userData['pro_pic'];
         isLoading = false;
         // Handle user data as needed
@@ -261,8 +267,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                           borderRadius:
                                               BorderRadius.circular(16),
                                           child: CachedNetworkImage(
-                                              imageUrl: user!.photoURL ??
-                                                  networkimage ??
+                                              imageUrl: networkimage ??
                                                   'https://img.freepik.com/free-photo/androgynous-avatar-non-binary-queer-person_23-2151100270.jpg?t=st=1720175052~exp=1720178652~hmac=67b3e52b727e401471af991edd972290fcadb25522ca62e671b0a025963463f5&w=740',
                                               placeholder: (context, url) =>
                                                   shimmerLoading(),
@@ -320,7 +325,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
 
                     // getData.read("UserLogin")["name"] ?? "",
-                    Text(user!.displayName ?? name ?? "",
+                    Text(name ?? "",
                         style: TextStyle(
                             fontSize: 17,
                             color: notifire.getdarkscolor,
@@ -328,7 +333,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.006),
-                    Text(user!.email ?? emailId ?? "",
+                    Text(emailId ?? "",
                         style: TextStyle(
                             color: notifire.getdarkscolor,
                             fontSize: 17,
@@ -702,6 +707,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     const SizedBox(height: 16),
                     number(),
                     const SizedBox(height: 24),
+                    countrycode(),
+                    const SizedBox(height: 24),
+
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -745,6 +753,7 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget email() {
     return CustomTextfield(
       hint: TextString.email,
+      readOnly: true,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your Email';
@@ -778,30 +787,21 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   /// Password Text Field
-  Widget passwordTextFormField() {
+  Widget countrycode() {
     return CustomTextfield(
-        hint: TextString.password,
-        obscureText: _isObscure,
-        fieldController: passwordController,
+        hint: TextString.cCode,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter your password';
+            return 'Please enter your country code';
           }
           return null;
         },
+        fieldController: ccodeController,
+        style: TextStyle(
+          color: notifire.getdarkscolor,
+        ),
         hintStyle: TextStyle(
-            fontFamily: CustomColors.fontFamily, color: notifire.greyfont),
-        suffixIcon: IconButton(
-            icon: _isObscure
-                ? const Icon(Icons.remove_red_eye_outlined,
-                    color: CustomColors.grey)
-                : const Icon(Icons.visibility_off_outlined,
-                    color: CustomColors.grey),
-            onPressed: () {
-              setState(() {
-                _isObscure = !_isObscure;
-              });
-            }));
+            fontFamily: CustomColors.fontFamily, color: notifire.greyfont));
   }
 
   /// Mobile Number
@@ -847,49 +847,8 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget saveButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Show a Dialog message
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                'Save Profile',
-                style: TextStyle(
-                  color: CustomColors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: CustomColors.fontFamily,
-                ),
-              ),
-              content: const Text(
-                'Right now data is not saving because it\'s fetched from Google.',
-                style: TextStyle(
-                  color: CustomColors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: CustomColors.fontFamily,
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(
-                      color: CustomColors.red,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: CustomColors.fontFamily,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Get.back();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        service.profileEditApi(nameController.text, Email.text,
+            passwordController.text, ccodeController.text, context);
       },
       child: Container(
         width: 166,

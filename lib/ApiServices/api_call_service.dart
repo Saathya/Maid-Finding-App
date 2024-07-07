@@ -301,29 +301,47 @@ class ApiService {
 
   /// -------------------------- Profile Edit Api --------------------------///
   EditProfileModel? editProfileModel;
-  profileEditApi(String? uid, name, password, context) async {
+
+  Future<void> profileEditApi(String? name, String? email, String? mobile,
+      String? ccode, context) async {
     try {
-      var params = {"name": name, "password": password, "uid": uid};
-      final response =
-          await dio.post(Config.baseUrl + Config.profileEdit, data: params);
+      var url = Uri.parse(
+          Config.baseUrl + Config.profileEdit); // Use correct endpoint URL
+      var body = json.encode({
+        "email": email,
+        "name": name,
+        "mobile": mobile,
+        "ccode": ccode,
+      });
+
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      );
+
       if (response.statusCode == 200) {
-        loginModel = LoginModel.fromJson(response.data);
+        var responseData = json.decode(response.body);
+        editProfileModel = EditProfileModel.fromJson(responseData);
 
-        setLoginData();
-        if (loginModel?.result == "true") {
-          Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
-          Navigator.pop(context);
+        if (editProfileModel?.result == "true") {
+          Fluttertoast.showToast(msg: "${editProfileModel?.responseMsg}");
+          Navigator.pop(
+              context); // Close the current screen after successful update
 
-          /// Get Login Data
+          // Assuming you have a method to refresh the UI or data after profile edit
           getLoginData();
-        } else if (loginModel == null) {
-          Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
         } else {
-          Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
+          Fluttertoast.showToast(msg: "${editProfileModel?.responseMsg}");
         }
+      } else {
+        Fluttertoast.showToast(
+            msg: "Failed to update profile: ${response.statusCode}");
       }
-    } on DioError catch (e) {
-      Fluttertoast.showToast(msg: "Error");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
     }
   }
 }

@@ -22,6 +22,7 @@ class TextString {
   static const emailAddress = "Mobile Number Or Email";
   static const email = "Email";
   static const number = "Mobile Number";
+  static const cCode = "Country Code";
   static const password = "Password";
   static const rememberMe = "Remember Me";
   static const forgotPassword = "Forgot Password ?";

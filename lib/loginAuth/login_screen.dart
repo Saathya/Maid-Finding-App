@@ -1,12 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mr_urban_customer_app/ApiServices/api_call_service.dart';
+import 'package:mr_urban_customer_app/ApiServices/url.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/custom_widegt/widegt.dart';
 import 'package:mr_urban_customer_app/loginAuth/forgot_password_screen.dart';
@@ -34,6 +36,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   bool isSelected = false;
+  String? emailId;
+  String? name;
+  String? mobiles;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -42,23 +47,78 @@ class _LoginScreenState extends State<LoginScreen> {
   String? uid;
 
   final _formKey = GlobalKey<FormState>();
+  ApiService service = ApiService();
 
   Future<void> _handleSignIn() async {
     try {
       User? user = await signInWithGoogle();
       if (user != null) {
-        // Navigate to BottomNavigationBarScreen on successful sign-in
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const BottomNavigationBarScreen()),
-        );
+        String email = user.email!;
+        bool userExists = await fetchUserData(email);
+
+        if (userExists) {
+          // User exists, navigate to BottomNavigationBarScreen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const BottomNavigationBarScreen()),
+          );
+        } else {
+          // User doesn't exist, register the user
+          await service.registerApi(
+            user.displayName,
+            user.email,
+            user.phoneNumber ?? '9999999999',
+            '+91', // Provide country code if available
+            'Gmail', // Password can be set to a default or fetched from another source
+            context,
+          );
+
+          // After registration, navigate to BottomNavigationBarScreen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const BottomNavigationBarScreen()),
+          );
+        }
       }
     } catch (e) {
-      print(e);
+      print("Error during sign-in: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Google Sign-In Failed")),
       );
+    }
+  }
+
+  Future<bool> fetchUserData(String email) async {
+    var url = Uri.parse(Config.baseUrl + Config.fetchuser);
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+
+    print("Fetching user data for email: $email");
+    print("Request URL: $url");
+    print("Request Body: ${jsonEncode({'email': email})}");
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      print("Response Data: $responseData");
+
+      if (responseData['Result'] == 'true') {
+        var userData = responseData['User'];
+        print('User data fetched successfully: $userData');
+        // Handle user data as needed
+        return true; // User exists
+      } else {
+        print('User not found with provided email');
+        return false; // User does not exist
+      }
+    } else {
+      print(
+          'Failed to fetch user data: ${response.statusCode} - ${response.body}');
+      return false; // Handle HTTP error
     }
   }
 
@@ -275,11 +335,31 @@ class _LoginScreenState extends State<LoginScreen> {
         onclick: () async {
           if (_formKey.currentState!.validate()) {
             if (isSelected == true) {
-              ApiService().loginApi(emailController.text,
-                  passwordController.text, context, widget.type!);
+              if (emailController.text.isNotEmpty &&
+                  passwordController.text.isNotEmpty) {
+                await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text)
+                    .then((value) => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const BottomNavigationBarScreen())));
+              }
             } else if (isSelected == false) {
-              ApiService().loginApi2(emailController.text,
-                  passwordController.text, context, widget.type);
+              if (emailController.text.isNotEmpty &&
+                  passwordController.text.isNotEmpty) {
+                await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text)
+                    .then((value) => Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const BottomNavigationBarScreen())));
+              }
             }
           }
         });
