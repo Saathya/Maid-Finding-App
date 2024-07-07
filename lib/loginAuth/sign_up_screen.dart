@@ -1,10 +1,11 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mr_urban_customer_app/ApiServices/api_call_service.dart';
+import 'package:mr_urban_customer_app/BootomBar.dart';
 import 'package:mr_urban_customer_app/loginAuth/login_screen.dart';
 import 'package:mr_urban_customer_app/model/country_code_list_model.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
@@ -13,9 +14,7 @@ import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:mr_urban_customer_app/widget/text_form_field.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../ApiServices/Api_werper.dart';
 import '../ApiServices/url.dart';
 import '../IntroScreen/splash_screen.dart';
@@ -41,6 +40,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
+  ApiService service = ApiService();
+
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailAddressController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
@@ -55,8 +56,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     prefs.setString("mobile", mobileController.text);
     prefs.setString("password", passwordController.text);
     prefs.setString("confirmPassword", confirmPasswordController.text);
-    prefs.setString("referralCode", referralCodeController.text);
+    prefs.setString("code", referralCodeController.text);
     prefs.setString("countryCode", _selectedCountryCode!);
+
+    // Debug prints to verify data is being saved
+    print('Name: ${prefs.getString("name")}');
+    print('Email: ${prefs.getString("email")}');
+    print('Mobile: ${prefs.getString("mobile")}');
+    print('Password: ${prefs.getString("password")}');
+    print('Confirm Password: ${prefs.getString("confirmPassword")}');
+    print('Referral Code: ${prefs.getString("code")}');
+    print('Country Code: ${prefs.getString("countryCode")}');
   }
 
   CountryCodeListModel? countryCodeListModel;
@@ -368,19 +378,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   /// ----------------------------------- Continue Button ------------------------------------------------///
+
+  createUserWithEmail(String email, String password, String name, String mobile,
+      String countryCode, context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      if (userCredential.user != null) {
+        await setRegisterData();
+
+        ApiService()
+            .registerApi(name, email, mobile, countryCode, password, context);
+
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const BottomNavigationBarScreen()));
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error: $e");
+    }
+  }
+
   Widget continueButton() {
     return _load == false
         ? InkWell(
             onTap: () {
               if (_formKey.currentState!.validate()) {
                 if (isSelected == true) {
-                  setRegisterData();
-                  isLoading = true;
-                  setState(() {});
-                  mobileCheckApi(mobileController.text, context,
-                      _selectedCountryCode, mobileController.text);
+                  setState(() {
+                    isLoading = true;
+                  });
+                  createUserWithEmail(
+                      emailAddressController.text,
+                      passwordController.text,
+                      fullNameController.text,
+                      mobileController.text,
+                      _selectedCountryCode!,
+                      context);
                 } else {
-                  Fluttertoast.showToast(msg: "selected term and condition");
+                  Fluttertoast.showToast(
+                      msg: "Please accept terms and conditions");
                 }
               }
             },
@@ -431,68 +469,68 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Dio dio = Dio();
 
-  MobileCheckModel? mobileCheckModel;
-  Future mobileCheckApi(String? mobile, context, String? ccode, number) async {
-    try {
-      var params = {"mobile": mobile};
+  // MobileCheckModel? mobileCheckModel;
+  // Future mobileCheckApi(String? mobile, context, String? ccode, number) async {
+  //   try {
+  //     var params = {"mobile": mobile};
 
-      final response =
-          await dio.post(Config.baseUrl + Config.mobileCheck, data: params);
-      if (response.statusCode == 200) {
-        mobileCheckModel =
-            MobileCheckModel.fromJson(json.decode(response.data));
+  //     final response =
+  //         await dio.post(Config.baseUrl + Config.mobileCheck, data: params);
+  //     if (response.statusCode == 200) {
+  //       mobileCheckModel =
+  //           MobileCheckModel.fromJson(json.decode(response.data));
 
-        if (mobileCheckModel!.result == "true") {
-          verifyPhone(ccode, number, context);
+  //       if (mobileCheckModel!.result == "true") {
+  //         verifyPhone(ccode, number, context);
 
-          Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
-        } else if (mobileCheckModel == null) {
-          setState(() {
-            isLoading = false;
-          });
-          Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
-        } else {
-          setState(() {
-            isLoading = false;
-          });
-          Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
-        }
-      }
-    } on DioError {
-      Fluttertoast.showToast(msg: "Error");
-    }
-  }
+  //         Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
+  //       } else if (mobileCheckModel == null) {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //         Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
+  //       } else {
+  //         setState(() {
+  //           isLoading = false;
+  //         });
+  //         Fluttertoast.showToast(msg: "${mobileCheckModel?.responseMsg}");
+  //       }
+  //     }
+  //   } on DioError {
+  //     Fluttertoast.showToast(msg: "Error");
+  //   }
+  // }
 
-  /// verification code
-  Future<void> verifyPhone(String? ccode, number, context) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: ccode! + number,
-      timeout: const Duration(seconds: 120),
-      verificationCompleted: (PhoneAuthCredential credential) {
-        setState(() {
-          isLoading = false;
-        });
-        ApiWrapper.showToastMessage("Auth Completed!");
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        setState(() {
-          isLoading = false;
-        });
-        ApiWrapper.showToastMessage("Auth Failed!");
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        setState(() {
-          isLoading = false;
-        });
-        Get.to(() => OtpVarificationScreen(verID: verificationId));
-        ApiWrapper.showToastMessage("OTP Sent!");
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          isLoading = false;
-        });
-        ApiWrapper.showToastMessage("Timeout!");
-      },
-    );
-  }
+  // /// verification code
+  // Future<void> verifyPhone(String? ccode, number, context) async {
+  //   await FirebaseAuth.instance.verifyPhoneNumber(
+  //     phoneNumber: ccode! + number,
+  //     timeout: const Duration(seconds: 120),
+  //     verificationCompleted: (PhoneAuthCredential credential) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       ApiWrapper.showToastMessage("Auth Completed!");
+  //     },
+  //     verificationFailed: (FirebaseAuthException e) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       ApiWrapper.showToastMessage("Auth Failed!");
+  //     },
+  //     codeSent: (String verificationId, int? resendToken) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       Get.to(() => OtpVarificationScreen(verID: verificationId));
+  //       ApiWrapper.showToastMessage("OTP Sent!");
+  //     },
+  //     codeAutoRetrievalTimeout: (String verificationId) {
+  //       setState(() {
+  //         isLoading = false;
+  //       });
+  //       ApiWrapper.showToastMessage("Timeout!");
+  //     },
+  //   );
+  // }
 }

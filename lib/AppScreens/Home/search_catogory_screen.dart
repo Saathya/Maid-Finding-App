@@ -96,7 +96,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
           '${maid.maidName} is already booked',
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: notifire.getdarkscolors,
+            color: notifire.getdarkscolor,
             fontSize: 16,
           ),
         ),
@@ -108,7 +108,7 @@ class _SearchCategoryScreenState extends State<SearchCategoryScreen> {
           '${maid.maidName} is booked',
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: notifire.getdarkscolors,
+            color: notifire.getdarkscolor,
             fontSize: 16,
           ),
         ),

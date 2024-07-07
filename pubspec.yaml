@@ -35,7 +35,7 @@ dependencies:
   carousel_slider: ^4.1.1
   scoped_model: ^2.0.0
   easy_localization: ^3.0.1
-  dio: ^4.0.6
+  dio: ^5.0.0
   fluttertoast: ^8.0.9
   shared_preferences: ^2.0.15
   firebase_auth: ^5.0.0 # Replace with latest version

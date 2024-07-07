@@ -1,5 +1,7 @@
 // ignore_for_file: unused_field, prefer_typing_uninitialized_variables, unused_catch_clause, avoid_print, unnecessary_string_escapes, depend_on_referenced_packages, prefer_is_empty, use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -67,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
     getPackage();
     setState(() {});
     getUserLocation1();
-    initPlatformState();
+    getUid(); // Fetch user UID from Firebase Auth
+    initOneSignal();
+    // initPlatformState();
     // if (first == "Select City") {
     //   // Show city selection popup only if first is "Select City"
     //   showCitySelectionPopup();
@@ -200,22 +204,32 @@ class _HomeScreenState extends State<HomeScreen> {
     // debugPrint('location: ${currentLocation.latitude}');
 
     setState(() {
-      uid = getData.read("UserLogin") != null
-          ? getData.read("UserLogin")["id"] ?? "0"
-          : "0";
       homePageApi();
     });
   }
 
-  Future<void> initPlatformState() async {
-    OneSignal.shared.setAppId(Config.oneSignel);
-    OneSignal.shared
-        .promptUserForPushNotificationPermission()
-        .then((accepted) {});
+  Future<void> getUid() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var userLoginData = preferences.getString("UserLogin");
+    if (userLoginData != null) {
+      var userData = jsonDecode(userLoginData);
+      setState(() {
+        uid = userData["user_id"] ??
+            "0"; // Assuming "id" is where you store the user ID
+      });
+    }
+  }
+
+  Future<void> initOneSignal() async {
+    await OneSignal.shared.setAppId(Config.oneSignel);
+    await OneSignal.shared.promptUserForPushNotificationPermission();
     OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
       print("Accepted OSPermissionStateChanges : $changes");
     });
-    await OneSignal.shared.sendTag("user_id", getData.read("UserLogin")["id"]);
+
+    // Set the user_id tag in OneSignal
+    await OneSignal.shared.sendTag("user_id", uid);
+    print("Set OneSignal user_id to: $uid");
   }
 
   Future<Position> locateUser() async {

@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   bool isSelected = false;
 
-  TextEditingController mobileController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   LoginModel? loginModel;
@@ -229,13 +229,13 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Email Text Field
   Widget emailTextFormField() {
     return CustomTextfield(
-      fieldController: mobileController,
+      fieldController: emailController,
       style: const TextStyle(color: Colors.white),
       hint: TextString.emailAddress,
       hintStyle: const TextStyle(fontFamily: CustomColors.fontFamily),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your mobile number';
+          return 'Please enter your email';
         }
         return null;
       },
@@ -275,10 +275,10 @@ class _LoginScreenState extends State<LoginScreen> {
         onclick: () async {
           if (_formKey.currentState!.validate()) {
             if (isSelected == true) {
-              ApiService().loginApi(mobileController.text,
-                  passwordController.text, context, widget.type);
+              ApiService().loginApi(emailController.text,
+                  passwordController.text, context, widget.type!);
             } else if (isSelected == false) {
-              ApiService().loginApi2(mobileController.text,
+              ApiService().loginApi2(emailController.text,
                   passwordController.text, context, widget.type);
             }
           }
@@ -311,41 +311,40 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
- Widget continueasGoogle() {
-  return Center(
-    child: InkWell(
-      onTap: _handleSignIn,
-      child: Container(
-        height: 48,
-        width: Get.width * 0.60,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-                color: notifire.greyfont, width: 1, style: BorderStyle.solid),
-            color: Colors.white),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-             ImagePath.googleIcon, // Path to the Google logo image
-              height: 24, // Adjust the height as needed
-            ),
-            const SizedBox(width: 10), // Space between the logo and the text
-            const Text(
-              TextString.google,
-              style: TextStyle(
-                fontFamily: CustomColors.fontFamily,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
+  Widget continueasGoogle() {
+    return Center(
+      child: InkWell(
+        onTap: _handleSignIn,
+        child: Container(
+          height: 48,
+          width: Get.width * 0.60,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: notifire.greyfont, width: 1, style: BorderStyle.solid),
+              color: Colors.white),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                ImagePath.googleIcon, // Path to the Google logo image
+                height: 24, // Adjust the height as needed
               ),
-            ),
-          ],
+              const SizedBox(width: 10), // Space between the logo and the text
+              const Text(
+                TextString.google,
+                style: TextStyle(
+                  fontFamily: CustomColors.fontFamily,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Future<User?> signInWithGoogle() async {
     // Trigger the authentication flow

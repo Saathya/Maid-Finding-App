@@ -69,7 +69,7 @@ class _BookingScreenState extends State<BookingScreen> {
         '${maid.maidName} removed from booking',
         style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: notifire.getdarkscolors,
+            color: notifire.getdarkscolor,
             fontSize: 16),
       ),
     ));
@@ -217,14 +217,14 @@ class _BookingScreenState extends State<BookingScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            maid.maidPrice.minPrice.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 1,
-                              color: Colors.transparent,
-                            ),
-                          ),
+                          // Text(
+                          //   maid.maidPrice.minPrice.toString(),
+                          //   style: const TextStyle(
+                          //     fontWeight: FontWeight.w700,
+                          //     fontSize: 1,
+                          //     color: Colors.transparent,
+                          //   ),
+                          // ),
                           Text(
                             maid.maidName,
                             style: TextStyle(
@@ -233,16 +233,15 @@ class _BookingScreenState extends State<BookingScreen> {
                               color: notifire.getdarkscolor,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "₹${maid.maidPrice.minPrice.toString()}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: notifire.getdarkscolor,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
+                          // Text(
+                          //   "₹${maid.maidPrice.minPrice.toString()}",
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.w600,
+                          //     fontSize: 15,
+                          //     color: notifire.getdarkscolor,
+                          //   ),
+                          // ),
+                          const SizedBox(height: 10),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mr_urban_customer_app/ApiServices/api_call_service.dart';
 import 'package:mr_urban_customer_app/ApiServices/url.dart';
@@ -51,6 +52,7 @@ class _AccountScreenState extends State<AccountScreen> {
   LoginModel? loginModel;
   String? emailId;
   String? name;
+  String? mobiles;
   String? pImage;
   String? base64Image;
   var height;
@@ -61,6 +63,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   User? user = FirebaseAuth.instance.currentUser;
 
+  final String TestEmail = 'dinspir821@gmail.com';
   String? networkimage;
   final Email = TextEditingController();
   final mobile = TextEditingController();
@@ -74,6 +77,8 @@ class _AccountScreenState extends State<AccountScreen> {
   final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmePassword = TextEditingController();
+
+  ApiService service = ApiService();
 
   /// Clear Login Data
   clearLoginData() async {
@@ -93,15 +98,9 @@ class _AccountScreenState extends State<AccountScreen> {
   getLoginData() async {
     isLoading = true;
     setState(() {});
-
-    nameController.text = user!.displayName ?? '';
-    mobile.text = user!.phoneNumber ?? '+917894561230';
-    Email.text = user!.email ?? '';
-    // nameController.text = getData.read("UserLogin")["name"] ?? "";
-    // passwordController.text = getData.read("UserLogin")["password"] ?? "";
-    // Email.text = getData.read("UserLogin")["email"] ?? "";
-    // mobile.text = getData.read("UserLogin")["mobile"] ?? "";
-    // networkimage = getData.read("UserLogin")["pro_pic"] ?? "";
+    nameController.text = name ?? user!.displayName ?? '';
+    passwordController.text = (mobiles ?? user!.phoneNumber)!;
+    Email.text = (emailId ?? user!.email)!;
 
     isLoading = false;
   }
@@ -116,13 +115,44 @@ class _AccountScreenState extends State<AccountScreen> {
     });
   }
 
+  Future<void> fetchUserData(String email) async {
+    var url = Uri.parse(Config.baseUrl + Config.fetchuser);
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      if (responseData['Result'] == 'true') {
+        var userData = responseData['User'];
+        print('User data fetched successfully: $userData');
+        name = userData['name'];
+        emailId = userData['email'];
+        mobiles = userData['mobile'];
+        networkimage = userData['pro_pic'];
+        isLoading = false;
+        // Handle user data as needed
+
+        getLoginData();
+      } else {
+        print('User not found with provided email');
+        // Handle error case
+      }
+    } else {
+      print('Failed to fetch user data: ${response.body}');
+      // Handle HTTP error
+    }
+  }
+
   @override
   void initState() {
-    // getData.read("UserLogin") != null ? getLoginData() : null;
     getWebData();
-    initPreferences();
-    getLoginData();
     getPackage();
+    if (user != null && user!.email != null) {
+      fetchUserData(user!.email!); // Fetch data using current user's email
+    }
     super.initState();
   }
 
@@ -226,12 +256,14 @@ class _AccountScreenState extends State<AccountScreen> {
                               height: Get.height * 0.10,
                               width: Get.width * 0.24,
                               child: _image == null
-                                  ? user != null
+                                  ? user != null || networkimage != ""
                                       ? ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(16),
                                           child: CachedNetworkImage(
-                                              imageUrl: user!.photoURL!,
+                                              imageUrl: user!.photoURL ??
+                                                  networkimage ??
+                                                  'https://img.freepik.com/free-photo/androgynous-avatar-non-binary-queer-person_23-2151100270.jpg?t=st=1720175052~exp=1720178652~hmac=67b3e52b727e401471af991edd972290fcadb25522ca62e671b0a025963463f5&w=740',
                                               placeholder: (context, url) =>
                                                   shimmerLoading(),
                                               errorWidget:
@@ -288,7 +320,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
 
                     // getData.read("UserLogin")["name"] ?? "",
-                    Text(user!.displayName ?? 'Guest',
+                    Text(user!.displayName ?? name ?? "",
                         style: TextStyle(
                             fontSize: 17,
                             color: notifire.getdarkscolor,
@@ -296,7 +328,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             fontWeight: FontWeight.w600)),
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.006),
-                    Text(user!.email ?? "Guest Email",
+                    Text(user!.email ?? emailId ?? "",
                         style: TextStyle(
                             color: notifire.getdarkscolor,
                             fontSize: 17,
@@ -737,7 +769,7 @@ class _AccountScreenState extends State<AccountScreen> {
           }
           return null;
         },
-        fieldController: mobile,
+        fieldController: passwordController,
         style: TextStyle(
           color: notifire.getdarkscolor,
         ),

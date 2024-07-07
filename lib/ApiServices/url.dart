@@ -11,6 +11,7 @@ class Config {
 
   static const profileImage = "pro_image.php";
   static const register = "reg_user.php";
+  static const fetchuser = "fetch_user.php";
   static const login = "login_users.php";
   static const mobileCheck = "mobile_check.php";
   static const forgotPassword = "forgets_password.php";

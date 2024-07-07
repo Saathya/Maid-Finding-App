@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print, unused_catch_clause
 
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -22,6 +21,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import '../AppScreens/Home/home_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
   Dio dio = Dio();
@@ -61,63 +61,103 @@ class ApiService {
   /// ------------------------------- Register Api ----------------------------- ///
   RegisterModel? registerModel;
 
-  Future registerApi(String? name, email, mobile, countryCode, password,
-      refcode, context) async {
+  LoginModel? loginModel;
+
+  Future<void> registerApi(
+    String? name,
+    String? email,
+    String? mobile,
+    String? countryCode,
+    String? password,
+    BuildContext context,
+  ) async {
     try {
-      var params = {
+      var url = Uri.parse(Config.baseUrl + Config.register);
+      var body = json.encode({
         "name": name,
         "email": email,
         "mobile": mobile,
         "ccode": countryCode,
-        "password": password,
-        "refercode": refcode
-      };
+        "password": password
+      });
 
-      final response =
-          await dio.post(Config.baseUrl + Config.register, data: params);
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      );
+
       if (response.statusCode == 200) {
+        var responseData = json.decode(response.body);
         save("Firstuser", true);
         save("Remember", true);
-        save("UserLogin", response.data["UserLogin"]);
-        loginModel = LoginModel.fromJson(response.data);
+        save("UserLogin", responseData["UserLogin"]);
+
+        loginModel = LoginModel.fromJson(responseData);
         setData();
         setLoginData();
 
         if (loginModel!.result == "true") {
           save("Firstuser", true);
-          save("UserLogin", response.data["UserLogin"]);
-          uid = response.data["UserLogin"]["id"];
+          save("UserLogin", responseData["UserLogin"]);
+          uid = responseData["UserLogin"]["id"];
+
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const BottomNavigationBarScreen()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavigationBarScreen(),
+            ),
+          );
         } else {
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
         }
+      } else {
+        // Print the error response for debugging
+        print("Failed to register. Error: ${response.body}");
+        Fluttertoast.showToast(msg: "Failed to register");
       }
-    } on DioError {
+    } catch (e) {
+      // Print other errors for debugging
+      print("Error caught: $e");
       Fluttertoast.showToast(msg: "Error");
     }
   }
 
-  LoginModel? loginModel;
-  Future loginApi(String? mobile, password, context, type) async {
+  Future<void> loginApi(
+    String? mobile,
+    String? password,
+    BuildContext context,
+    String type,
+  ) async {
     try {
-      var params = {"mobile": mobile, "password": password};
+      var url = Uri.parse(Config.baseUrl + Config.login);
+      var body = json.encode({
+        "email": mobile,
+        "password": password,
+      });
 
-      final response =
-          await dio.post(Config.baseUrl + Config.login, data: params);
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body,
+      );
+
       if (response.statusCode == 200) {
-        loginModel = LoginModel.fromJson(response.data);
+        var responseData = json.decode(response.body);
+        loginModel = LoginModel.fromJson(responseData);
         setLoginData();
         setImage();
 
         if (loginModel?.result == "true") {
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
           save("Firstuser", true);
-          save("UserLogin", response.data["UserLogin"]);
-          uid = response.data["UserLogin"]["id"];
+          save("UserLogin", responseData["UserLogin"]);
+          uid = responseData["UserLogin"]["id"];
           if (type == "payment") {
             Get.back();
           } else {
@@ -133,15 +173,21 @@ class ApiService {
         } else {
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
         }
+      } else {
+        // Print the error response for debugging
+        print("Failed to login. Error: ${response.body}");
+        Fluttertoast.showToast(msg: "Failed to login");
       }
-    } on DioError {
+    } catch (e) {
+      // Print other errors for debugging
+      print("Error caught: $e");
       Fluttertoast.showToast(msg: "Error");
     }
   }
 
   loginApi2(String? mobile, password, context, type) async {
     try {
-      var params = {"mobile": mobile, "password": password};
+      var params = {"email": mobile, "password": password};
 
       final response =
           await dio.post(Config.baseUrl + Config.login, data: params);
@@ -180,7 +226,7 @@ class ApiService {
   /// Forgot password Api
   Future forgetPasswordApi(String? number, password, context) async {
     try {
-      var params = {"mobile": number, "password": password};
+      var params = {"email": number, "password": password};
       final response =
           await dio.post(Config.baseUrl + Config.forgotPassword, data: params);
       if (response.statusCode == 200) {
