@@ -37,8 +37,8 @@ String uid = "0";
 String? currency;
 String? referCredit;
 String? wallet;
-var lat = 20.5937; // Default latitude for India
-var long = 78.9629;
+var lat; // Default latitude for India
+var long;
 var first;
 
 class HomeScreen extends StatefulWidget {
@@ -64,11 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     walletrefar();
+    lat == null ? getUserLocation() : getUserLocation1();
+
     // etdarkmodepreviousstate();
     initSharedPreferences();
     getPackage();
     setState(() {});
-    getUserLocation1();
     getUid(); // Fetch user UID from Firebase Auth
     initOneSignal();
     // initPlatformState();
@@ -78,8 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // }
     super.initState();
   }
-
-  // lat == null ? getUserLocation() : getUserLocation1();
 
   late SharedPreferences prefs; // Declare SharedPreferences instance
 
@@ -121,87 +120,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   late ColorNotifire notifire;
+  Future<void> getUserLocation() async {
+    setState(() {
+      isLoding = true;
+    });
 
-  // Future getUserLocation() async {
-  //   isLoding = true;
-  //   setState(() {});
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // Handle case when user denies location permission
+        setState(() {
+          isLoding = false;
+        });
+        return;
+      }
+    }
 
-  // // Check and request location permissions if needed
-  // LocationPermission permission;
-  // permission = await Geolocator.checkPermission();
-  // permission = await Geolocator.requestPermission();
+    Position? currentLocation;
+    try {
+      currentLocation = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+    } catch (e) {
+      print("Error getting location: $e");
+      setState(() {
+        isLoding = false;
+      });
+      return;
+    }
 
-  // // Obtain current location
-  // var currentLocation = await locateUser();
+    setState(() {
+      lat = currentLocation!.latitude;
+      long = currentLocation.longitude;
+      isLoding = false;
+    });
 
-  // // Retrieve latitude and longitude
-  // lat = currentLocation.latitude;
-  // long = currentLocation.longitude;
-
-  // Retrieve city name using Geocoding
-  // setState(() {
-  //   // Update state variables
-  //   // Assuming you want to display the first city name
-  //   uid = getData.read("UserLogin") != null
-  //       ? getData.read("UserLogin")["id"] ?? "0"
-  //       : "0";
-  //   homePageApi();
-
-  // Show dropdown or popup menu with city names
-  //   });
-  // }
-
-  // void showCitySelectionPopup() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Select City'),
-  //         contentPadding:
-  //             const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  //         content: SizedBox(
-  //           width: double.maxFinite,
-  //           child: DropdownButton<String>(
-  //             isExpanded: true,
-  //             underline: Container(
-  //               height: 1,
-  //               color: Colors.grey.shade400,
-  //             ),
-  //             icon: const Icon(Icons.arrow_drop_down),
-  //             iconSize: 36,
-  //             elevation: 8,
-  //             style: const TextStyle(fontSize: 16, color: Colors.black),
-  //             value: first, // Initially selected city
-  //             onChanged: (String? selectedCity) {
-  //               setState(() {
-  //                 first = selectedCity!; // Update selected city
-  //               });
-  //               saveSelectedCity(first); // Save the current selected city
-  //               Navigator.of(context).pop(); // Close the dialog
-  //             },
-  //             items:
-  //                 dummyCityNames.map<DropdownMenuItem<String>>((String value) {
-  //               return DropdownMenuItem<String>(
-  //                 value: value,
-  //                 child: Text(value),
-  //               );
-  //             }).toList(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+    // Call homePageApi with fetched latitude and longitude
+    homePageApi();
+  }
 
   Future getUserLocation1() async {
     isLoding = true;
     setState(() {});
-    // LocationPermission permission;
-    // permission = await Geolocator.checkPermission();
-    // permission = await Geolocator.requestPermission();
-    // if (permission == LocationPermission.denied) {}
-    // var currentLocation = await locateUser();
-    // debugPrint('location: ${currentLocation.latitude}');
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission();
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {}
+    var currentLocation = await locateUser();
+    debugPrint('location: ${currentLocation.latitude}');
 
     setState(() {
       homePageApi();

@@ -1,8 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,9 +20,7 @@ import 'package:mr_urban_customer_app/utils/colors.dart';
 import 'package:mr_urban_customer_app/utils/image_icon_path.dart';
 import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../widget/text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -48,38 +46,46 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _formKey = GlobalKey<FormState>();
   ApiService service = ApiService();
+  String generateRandomNumber() {
+    Random random = Random();
+    String randomNumber = '';
 
-  Future<void> _handleSignIn() async {
+    for (int i = 0; i < 10; i++) {
+      randomNumber += random.nextInt(9).toString();
+    }
+
+    return randomNumber;
+  }
+
+  Future<void> _handleSignIn(BuildContext context) async {
     try {
       User? user = await signInWithGoogle();
       if (user != null) {
         String email = user.email!;
-        bool userExists = await fetchUserData(email);
+        String phoneNumber = user.phoneNumber ?? generateRandomNumber();
+
+        bool userExists = await fetchUserDataAndRegister(
+          user.displayName ?? 'No Name',
+          email,
+          phoneNumber,
+          '+91',
+          'Gmail',
+          context,
+        );
 
         if (userExists) {
           // User exists, navigate to BottomNavigationBarScreen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const BottomNavigationBarScreen()),
+              builder: (context) => const BottomNavigationBarScreen(),
+            ),
           );
         } else {
-          // User doesn't exist, register the user
-          await service.registerApi(
-            user.displayName,
-            user.email,
-            user.phoneNumber ?? '9999999999',
-            '+91', // Provide country code if available
-            'Gmail', // Password can be set to a default or fetched from another source
-            context,
-          );
-
-          // After registration, navigate to BottomNavigationBarScreen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const BottomNavigationBarScreen()),
-          );
+          // Registration failed, show an error message if needed
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(content: Text("Registration Failed")),
+          // );
         }
       }
     } catch (e) {
@@ -90,7 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<bool> fetchUserData(String email) async {
+  Future<bool> fetchUserDataAndRegister(
+    String name,
+    String email,
+    String mobile,
+    String countryCode,
+    String password,
+    BuildContext context,
+  ) async {
     var url = Uri.parse(Config.baseUrl + Config.fetchuser);
     final response = await http.post(
       url,
@@ -107,17 +120,27 @@ class _LoginScreenState extends State<LoginScreen> {
       print("Response Data: $responseData");
 
       if (responseData['Result'] == 'true') {
-        var userData = responseData['User'];
-        print('User data fetched successfully: $userData');
-        // Handle user data as needed
+        print('User data fetched successfully');
         return true; // User exists
       } else {
-        print('User not found with provided email');
-        return false; // User does not exist
+        print('User not found with provided email. Registering user...');
+        await service.registerApi(
+          name,
+          email,
+          mobile,
+          countryCode,
+          password,
+          context,
+        );
+        return false; // Assume registration always returns false here to indicate user does not exist (since fetchUserDataAndRegister is used for registration purpose)
       }
     } else {
       print(
           'Failed to fetch user data: ${response.statusCode} - ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Failed to fetch user data: ${response.statusCode}')),
+      );
       return false; // Handle HTTP error
     }
   }
@@ -331,38 +354,75 @@ class _LoginScreenState extends State<LoginScreen> {
   /// ----------------------------------- Login Button ------------------------------------------------///
   Widget loginButton() {
     return AppButton(
-        buttontext: TextString.login,
-        onclick: () async {
-          if (_formKey.currentState!.validate()) {
-            if (isSelected == true) {
-              if (emailController.text.isNotEmpty &&
-                  passwordController.text.isNotEmpty) {
-                await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text)
-                    .then((value) => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const BottomNavigationBarScreen())));
-              }
-            } else if (isSelected == false) {
-              if (emailController.text.isNotEmpty &&
-                  passwordController.text.isNotEmpty) {
-                await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text)
-                    .then((value) => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const BottomNavigationBarScreen())));
-              }
-            }
+      buttontext: TextString.login,
+      onclick: () async {
+        if (_formKey.currentState!.validate()) {
+          String email = emailController.text.trim();
+          String password = passwordController.text.trim();
+
+          // Validate email format using a regular expression
+          if (!isValidEmail(email)) {
+            // Show error message for invalid email
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Please enter a valid email address')),
+            );
+            return;
           }
-        });
+
+          try {
+            // Attempt to sign in with Firebase authentication
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+
+            // If sign-in is successful, navigate to the next screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavigationBarScreen(),
+              ),
+            );
+          } on FirebaseAuthException catch (e) {
+            String errorMessage = 'An error occurred';
+
+            // Handle specific error codes
+            if (e.code == 'wrong-password') {
+              errorMessage = 'The password is incorrect.';
+            } else if (e.code == 'user-not-found') {
+              errorMessage = 'No user found with that email.';
+            } else {
+              // Handle other Firebase related errors
+              print(
+                  'Firebase Error: ${e.message}'); // Print or log the Firebase error message
+              errorMessage = 'Firebase Error: ${e.message}';
+            }
+
+            // Display error message using ScaffoldMessenger or another appropriate method
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(errorMessage),
+              ),
+            );
+          } catch (e) {
+            // Handle other generic errors
+            print('Error occurred: $e');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error occurred: $e'),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+
+  bool isValidEmail(String email) {
+    String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    RegExp regex = RegExp(emailPattern);
+    return regex.hasMatch(email);
   }
 
   /// ----------------------------------- Sign Up Button ------------------------------------------------///
@@ -394,7 +454,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget continueasGoogle() {
     return Center(
       child: InkWell(
-        onTap: _handleSignIn,
+        onTap: () {
+          _handleSignIn(context);
+        },
         child: Container(
           height: 48,
           width: Get.width * 0.60,

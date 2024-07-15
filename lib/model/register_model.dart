@@ -38,7 +38,6 @@ class UserLogin {
   String? status;
   String? ccode;
   String? code;
-  String? refercode;
   String? wallet;
   String? proPic;
 
@@ -52,7 +51,6 @@ class UserLogin {
       this.status,
       this.ccode,
       this.code,
-      this.refercode,
       this.wallet,
       this.proPic});
 
@@ -66,7 +64,6 @@ class UserLogin {
     status = json['status'];
     ccode = json['ccode'];
     code = json['code'];
-    refercode = json['refercode'];
     wallet = json['wallet'];
     proPic = json['pro_pic'];
   }
@@ -82,7 +79,6 @@ class UserLogin {
     data['status'] = status;
     data['ccode'] = ccode;
     data['code'] = code;
-    data['refercode'] = refercode;
     data['wallet'] = wallet;
     data['pro_pic'] = proPic;
     return data;

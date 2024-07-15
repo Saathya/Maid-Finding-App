@@ -62,7 +62,6 @@ class ApiService {
   RegisterModel? registerModel;
 
   LoginModel? loginModel;
-
   Future<void> registerApi(
     String? name,
     String? email,
@@ -91,20 +90,30 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var responseData = json.decode(response.body);
-        save("Firstuser", true);
-        save("Remember", true);
-        save("UserLogin", responseData["UserLogin"]);
+        print("Registration Response Data: $responseData");
 
-        loginModel = LoginModel.fromJson(responseData);
-        setData();
-        setLoginData();
+        if (responseData["Result"] == "true") {
+          // Registration successful, process the user data
+          var userLoginData = responseData["UserLogin"];
+          print("UserLogin Data: $userLoginData");
 
-        if (loginModel!.result == "true") {
           save("Firstuser", true);
-          save("UserLogin", responseData["UserLogin"]);
-          uid = responseData["UserLogin"]["id"];
+          save("Remember", true);
+          save("UserLogin", userLoginData);
 
-          Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
+          // Optionally, process the login model if needed
+          // loginModel = LoginModel.fromJson(responseData);
+          // setData();
+          // setLoginData();
+
+          // Navigate to the next screen upon successful registration
+          // save("Firstuser", true);
+          // save("UserLogin", userLoginData);
+          // uid = userLoginData["id"]; // Assuming "id" is the key for user ID
+
+          Fluttertoast.showToast(msg: "${responseData["ResponseMsg"]}");
+
+          // Navigate to BottomNavigationBarScreen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -112,15 +121,17 @@ class ApiService {
             ),
           );
         } else {
-          Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
+          // Registration failed, show error message
+          Fluttertoast.showToast(
+              msg: "Registration Failed: ${responseData["ResponseMsg"]}");
         }
       } else {
-        // Print the error response for debugging
+        // Handle HTTP error
         print("Failed to register. Error: ${response.body}");
         Fluttertoast.showToast(msg: "Failed to register");
       }
     } catch (e) {
-      // Print other errors for debugging
+      // Handle other errors
       print("Error caught: $e");
       Fluttertoast.showToast(msg: "Error");
     }
