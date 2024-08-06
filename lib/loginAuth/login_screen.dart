@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print, depend_on_referenced_packages, deprecated_member_use
 
 import 'dart:convert';
 import 'dart:math';
@@ -190,6 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: notifire.getprimerycolor,
         appBar: AppBar(
+            automaticallyImplyLeading:
+                false, // Add this line to disable the default back button
+
             // leading: IconButton(
             //     icon: Icon(Icons.arrow_back,
             //         color: notifire.getdarkscolor, size: 28),
@@ -208,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: notifire.getdarkscolor,
                   fontWeight: FontWeight.bold,
                   fontFamily: CustomColors.fontFamily,
-                  fontSize: 18),
+                  fontSize: 28),
             ),
             centerTitle: true),
         body: Padding(
@@ -222,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextString.letsSignYouIn,
                 style: TextStyle(
                     color: notifire.getdarkscolor,
-                    fontSize: 36,
+                    fontSize: 25,
                     fontWeight: FontWeight.w700,
                     fontFamily: CustomColors.fontFamily),
               ),
@@ -230,12 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 TextString.Welcomebackyouvebeenmissed,
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w400,
                     fontFamily: CustomColors.fontFamily,
                     color: notifire.greyfont),
               ),
-              const SizedBox(height: 38),
+              const SizedBox(height: 18),
 
               emailTextFormField(),
               const SizedBox(height: 24),
@@ -314,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return CustomTextfield(
       fieldController: emailController,
       style: const TextStyle(color: Colors.white),
-      hint: TextString.emailAddress,
+      hint: TextString.email,
       hintStyle: const TextStyle(fontFamily: CustomColors.fontFamily),
       validator: (value) {
         if (value == null || value.isEmpty) {

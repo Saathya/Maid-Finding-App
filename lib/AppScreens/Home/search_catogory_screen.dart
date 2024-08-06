@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, avoid_print, prefer_const_constructors, unused_catch_clause, prefer_is_empty, await_only_futures, prefer_typing_uninitialized_variables
+// ignore_for_file: must_be_immutable, avoid_print, prefer_const_constructors, unused_catch_clause, prefer_is_empty, await_only_futures, prefer_typing_uninitialized_variables, use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

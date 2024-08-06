@@ -14,7 +14,7 @@ class TextString {
 
   /// Login Screen
   ///
-  static const google = "Continue as Google";
+  static const google = "Continue with Google";
   static const login = "Login";
   static const or = "OR";
   static const letsSignYouIn = "Let’s Sign You In";
@@ -34,8 +34,10 @@ class TextString {
   static const register = "Register";
   static const gettingStarted = "Getting Started";
   static const Seemsyouarenewhere =
-      "Seems you are new here,Let’s set up your profile.";
+      "Seems you are new here, Let’s set up your profile.";
   static const fullName = "Full Name";
+    static const city = "City";
+
   static const confirmPassword = "Confirm Password";
   static const emailaddress = "Email Address";
   static const referralCode = "Referral Code";

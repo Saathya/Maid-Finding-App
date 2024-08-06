@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +14,8 @@ import 'package:mr_urban_customer_app/utils/text_widget.dart';
 import 'package:mr_urban_customer_app/widget/text_form_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../ApiServices/Api_werper.dart';
-import '../ApiServices/url.dart';
 import '../IntroScreen/splash_screen.dart';
-import '../model/mobileCheckModel.dart';
-import 'otp_verification_screen.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -36,6 +32,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   String? _selectedCountryCode = '';
 
+  String? selectedCity = "New Delhi";
+
+  List<String> dummyCityNames = ["New Delhi", "Pune", "Bengaluru", "Mumbai"];
+
   String emailRegularParttern = r"([a-z0-9_@.]}";
 
   final _formKey = GlobalKey<FormState>();
@@ -44,6 +44,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailAddressController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+
   TextEditingController mobileController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
@@ -60,13 +62,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     prefs.setString("countryCode", _selectedCountryCode!);
 
     // Debug prints to verify data is being saved
-    print('Name: ${prefs.getString("name")}');
-    print('Email: ${prefs.getString("email")}');
-    print('Mobile: ${prefs.getString("mobile")}');
-    print('Password: ${prefs.getString("password")}');
-    print('Confirm Password: ${prefs.getString("confirmPassword")}');
-    print('Referral Code: ${prefs.getString("code")}');
-    print('Country Code: ${prefs.getString("countryCode")}');
+    // print('Name: ${prefs.getString("name")}');
+    // print('Email: ${prefs.getString("email")}');
+    // print('Mobile: ${prefs.getString("mobile")}');
+    // print('Password: ${prefs.getString("password")}');
+    // print('Confirm Password: ${prefs.getString("confirmPassword")}');
+    // print('Referral Code: ${prefs.getString("code")}');
+    // print('Country Code: ${prefs.getString("countryCode")}');
   }
 
   CountryCodeListModel? countryCodeListModel;
@@ -110,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 color: notifire.getdarkscolor,
                 fontWeight: FontWeight.bold,
                 fontFamily: CustomColors.fontFamily,
-                fontSize: 18)),
+                fontSize: 28)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -124,14 +126,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Text(TextString.gettingStarted,
                           style: TextStyle(
-                              fontSize: 36,
+                              fontSize: 24,
                               color: notifire.getdarkscolor,
                               fontWeight: FontWeight.w700,
                               fontFamily: CustomColors.fontFamily)),
                       SizedBox(height: Get.height * 0.01),
                       const Text(TextString.Seemsyouarenewhere,
                           style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 20,
                               fontWeight: FontWeight.w400,
                               fontFamily: CustomColors.fontFamily,
                               color: CustomColors.grey)),
@@ -145,6 +147,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       passwordTextFormField(),
                       SizedBox(height: Get.height * 0.02),
                       confirmPasswordTextFormField(),
+                      SizedBox(height: Get.height * 0.02),
+                      cityTextField(),
                       SizedBox(height: Get.height * 0.02),
                       referralCodeTextField(),
                       SizedBox(height: Get.height * 0.02),
@@ -239,6 +243,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
           fontFamily: CustomColors.fontFamily,
           color: notifire.getdarkscolor,
         ));
+  }
+
+  Widget cityTextField() {
+    return InputDecorator(
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: 2.0), // Adjust this for more compact height
+        hintStyle: TextStyle(
+          fontFamily: CustomColors.fontFamily,
+          color: notifire.getdarkscolor,
+        ),
+        labelText: TextString.city,
+        labelStyle: const TextStyle(color: CustomColors.grey),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: CustomColors.grey),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        border: OutlineInputBorder(
+          borderSide: const BorderSide(color: CustomColors.red, width: 0),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: CustomColors.red),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: CustomColors.grey),
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          dropdownColor: Colors.black, // Replace with your primary color
+          value: selectedCity,
+          isExpanded: true, // Make the dropdown full-width
+          items: dummyCityNames.map((value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 14.0, color: Colors.white),
+              ),
+            );
+          }).toList(),
+          onChanged: (String? value) {
+            setState(() {
+              selectedCity = value;
+            });
+          },
+          style: const TextStyle(fontSize: 14.0, color: Colors.white),
+        ),
+      ),
+    );
   }
 
   cpicker() {

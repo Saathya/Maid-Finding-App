@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, unused_local_variable
+// ignore_for_file: use_build_context_synchronously, unused_local_variable, avoid_print
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/route_manager.dart';
-import 'package:mr_urban_customer_app/AppScreens/Home/ViewAllSection.dart';
 import 'package:mr_urban_customer_app/BootomBar.dart';
-import 'package:mr_urban_customer_app/loginAuth/change_password_screen.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';
 import 'package:mr_urban_customer_app/utils/colors.dart';

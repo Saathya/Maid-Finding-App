@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print, unused_catch_clause
+// ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print, unused_catch_clause, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:convert';
 import 'package:dio/dio.dart';
@@ -226,7 +226,7 @@ class ApiService {
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
         }
       }
-    } on DioError {
+    } on DioException {
       Fluttertoast.showToast(msg: "Error");
     }
   }
@@ -252,7 +252,7 @@ class ApiService {
           Fluttertoast.showToast(msg: "${forgotPasswordModel?.responseMsg}");
         }
       }
-    } on DioError {
+    } on DioException {
       Fluttertoast.showToast(msg: "Error");
     }
   }
@@ -305,7 +305,7 @@ class ApiService {
           Fluttertoast.showToast(msg: "${loginModel?.responseMsg}");
         }
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       Fluttertoast.showToast(msg: "Error");
     }
   }

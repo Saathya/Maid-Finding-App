@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_print, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:mr_urban_customer_app/AppScreens/Home/ViewAllSection.dart';
 import 'package:mr_urban_customer_app/AppScreens/Home/search_catogory_screen.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:provider/provider.dart';

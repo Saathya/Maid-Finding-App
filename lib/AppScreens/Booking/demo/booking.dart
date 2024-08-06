@@ -1,11 +1,11 @@
-// ignore_for_file: avoid_print, file_names
+// ignore_for_file: avoid_print, file_names, unreachable_switch_case, use_build_context_synchronously
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:mr_urban_customer_app/ApiServices/Api_werper.dart';
-import 'package:mr_urban_customer_app/AppScreens/Booking/BookingDetails.dart';
+import 'package:mr_urban_customer_app/AppScreens/Booking/bookingdetails.dart';
 import 'package:mr_urban_customer_app/model/dummy/service.dart';
 import 'package:mr_urban_customer_app/utils/AppWidget.dart';
 import 'package:mr_urban_customer_app/utils/color_widget.dart';

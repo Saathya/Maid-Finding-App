@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, must_be_immutable, unused_field, prefer_typing_uninitialized_variables, prefer_final_fields, unnecessary_string_interpolations, prefer_is_empty, avoid_print, unused_local_variable, unnecessary_brace_in_string_interps, sort_child_properties_last, library_private_types_in_public_api, non_constant_identifier_names, unnecessary_import
+// ignore_for_file: depend_on_referenced_packages, must_be_immutable, unused_field, prefer_typing_uninitialized_variables, prefer_final_fields, unnecessary_string_interpolations, prefer_is_empty, avoid_print, unused_local_variable, unnecessary_brace_in_string_interps, sort_child_properties_last, library_private_types_in_public_api, non_constant_identifier_names, unnecessary_import, deprecated_member_use
 
 import 'package:animation_search_bar/animation_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';

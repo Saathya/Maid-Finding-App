@@ -40,7 +40,7 @@ class NotesDatabase {
       ${NoteFields.isApprove} $textType
       )
       ''');
-    } on DioError {}
+    } on DioException {}
   }
 
   static Future addData(Servicelist serviceList) async {

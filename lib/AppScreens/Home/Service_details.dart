@@ -115,7 +115,7 @@ class _ServicedetailState extends State<Servicedetail> {
           Fluttertoast.showToast(msg: addressListModel!.responseMsg!);
         }
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       Fluttertoast.showToast(msg: "Error");
     }
   }
